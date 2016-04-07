@@ -1,0 +1,565 @@
+//
+//  VCEditOrder.m
+//  ClearWater
+//
+//  Created by Rett Pop on 2016-04-07.
+//  Copyright © 2016 SapiSoft. All rights reserved.
+//
+
+#import "VCEditOrder.h"
+#import "UIKit/UITableView.h"
+#import "UIView+SSUIViewCategory.h"
+#import "OrderModel.h"
+
+typedef enum : NSUInteger {
+    SECTION_CLIENT,
+    SECTION_ADDRESS,
+    SECTION_SCHEDULE,
+    SECTION_CONTENT,
+    SECTION_COMMENTS,
+    SECTION_CONFIRM,
+    SECTION_COUNTER
+} Sections;
+
+typedef enum : NSUInteger {
+    ITEM_CLIENTCODE=0,
+    ITEM_CLIENTCODE_COUNTER,
+    ITEM_ADDRESS_CITY=0,
+    ITEM_ADDRESS_STREET,
+    ITEM_ADDRESS_HOUSE,
+    ITEM_ADDRESS_OFFICE,
+    ITEM_ADDRESS_CONTACTNAME,
+    ITEM_ADDRESS_CONTACTPHONE,
+    ITEM_ADDRESS_COUNTER,
+    ITEM_SCHEDULE_DATE=0,
+    ITEM_SCHEDULE_TIME,
+    ITEM_SCHEDULE_COUNTER,
+    ITEM_CONTENT_CLEARWATER=0,
+    ITEM_CONTENT_FLUORIDATED,
+    ITEM_CONTENT_IODINATED,
+//    ITEM_CONTENT_ADDITIONAL,
+    ITEM_CONTENT_COUNTER,
+    ITEM_CONFIRM_SMS=0,
+    ITEM_CONFIRM_EMAIL,
+    ITEM_CONFIRM_PHONE,
+    ITEM_CONFIRM_COUNTER,
+    ITEM_COMMENTS=0,
+    ITEM_COMMENTS_COUNTER
+} OrderItems;
+
+#define kTableGeneralCellID @"kTableGeneralCellID"
+#define CompCellID(x,y) [NSString stringWithFormat:@"SECTION %li ITEM %li", x, y]
+#define kDefaultCellHeight 60.f
+#define LOC(__key__) [[NSBundle mainBundle] localizedStringForKey:(__key__) value:nil table:nil]
+
+
+@interface VCEditOrder ()
+{
+    BOOL _isKBVisible;
+    CGFloat _viewShiftDelta;
+    OrderModel *_order;
+}
+-(IBAction)sendOrderTapped:(id)sender;
+
+
+@property (strong, nonatomic) IBOutlet UIButton *btnSendOrder;
+@property (strong, nonatomic) IBOutlet UITableView *tableView;
+
+@property (strong, nonatomic) UITextField *clientCode;
+@property (strong, nonatomic) UITextField *addressCity;
+@property (strong, nonatomic) UITextField *addressStreet;
+@property (strong, nonatomic) UITextField *addressHouse;
+@property (strong, nonatomic) UITextField *addressApt;
+@property (strong, nonatomic) UITextField *addressContactName;
+@property (strong, nonatomic) UITextField *addressContactPhone;
+@property (strong, nonatomic) UITextField *scheduleTime;
+@property (strong, nonatomic) UITextField *scheduleDate;
+@property (strong, nonatomic) UILabel *contentClearWater;
+@property (strong, nonatomic) UILabel *contentFluoride;
+@property (strong, nonatomic) UILabel *contentIodinated;
+@property (strong, nonatomic) UITextField *confirmSMS;
+@property (strong, nonatomic) UITextField *confirmPhone;
+@property (strong, nonatomic) UITextField *confirmEmail;
+@property (strong, nonatomic) UITextField *orderComments;
+
+@property (strong, nonatomic) UIStepper *stepperClearWater;
+@property (strong, nonatomic) UIStepper *stepperFluoride;
+@property (strong, nonatomic) UIStepper *stepperIodinate;
+
+@end
+
+@implementation VCEditOrder
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    [self initFields];
+    _order = [[OrderModel alloc] init];
+    [[self navigationItem] setTitle:LOC(@"Clear Water")];
+    [[self navigationItem] setRightBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:LOC(@"Restore") style:UIBarButtonItemStylePlain target:nil action:nil]];
+
+    // handle keyboard appearance to change UI layout
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillAppear:)
+                                                 name:UIKeyboardWillShowNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillDisappear:)
+                                                 name:UIKeyboardWillHideNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(willResignActive:)
+                                                 name:UIApplicationWillResignActiveNotification
+                                               object:nil];
+
+}
+
+-(void)initFields
+{
+    _clientCode = [self newFieldWithPlaceholder:LOC(@"placeholder.ClientCode") andKeyboard:UIKeyboardTypeNumberPad];
+    _addressCity = [self newFieldWithPlaceholder:LOC(@"placeholder.AddressCity")];
+    _addressStreet = [self newFieldWithPlaceholder:LOC(@"placeholder.AddressStreet")];
+    _addressHouse = [self newFieldWithPlaceholder:LOC(@"placeholder.addressHouse")];
+    _addressApt = [self newFieldWithPlaceholder:LOC(@"placeholder.addressApt")];
+    _addressContactName = [self newFieldWithPlaceholder:LOC(@"placeholder.addressContactName")];
+    _addressContactPhone = [self newFieldWithPlaceholder:LOC(@"placeholder.addressContactPhone") andKeyboard:UIKeyboardTypePhonePad];
+    _scheduleTime = [self newFieldWithPlaceholder:LOC(@"placeholder.scheduleTime")];
+    _scheduleDate = [self newFieldWithPlaceholder:LOC(@"placeholder.scheduleDate")];
+//    _contentClearWater = [self newFieldWithPlaceholder:LOC(@"placeholder.contentClearWater")];
+//    _contentFluoride = [self newFieldWithPlaceholder:LOC(@"placeholder.contentFluoride")];
+//    _contentIodinated = [self newFieldWithPlaceholder:LOC(@"placeholder.contentIodinated")];
+    _confirmSMS = [self newFieldWithPlaceholder:LOC(@"placeholder.confirmSMS") andKeyboard:UIKeyboardTypePhonePad];
+    _confirmPhone = [self newFieldWithPlaceholder:LOC(@"placeholder.confirmPhone") andKeyboard:UIKeyboardTypePhonePad];
+    _confirmEmail = [self newFieldWithPlaceholder:LOC(@"placeholder.confirmEmail") andKeyboard:UIKeyboardTypeEmailAddress];
+    _orderComments = [self newFieldWithPlaceholder:LOC(@"placeholder.orderComments")];
+    
+    _stepperClearWater = [self newStepper];
+    _stepperFluoride = [self newStepper];
+    _stepperIodinate = [self newStepper];
+    _contentClearWater = [self newLabel];
+    _contentFluoride = [self newLabel];
+    _contentIodinated = [self newLabel];
+}
+
+-(UILabel *)newLabel
+{
+    UILabel *lbl = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 94, kDefaultCellHeight)];
+    [lbl setTextAlignment:NSTextAlignmentRight];
+    return lbl;
+}
+
+-(UIStepper *)newStepper
+{
+    UIStepper *newStepper = [[UIStepper alloc] initWithFrame:CGRectMake(0, 0, 94, 29)];
+    [newStepper setStepValue:1];
+    [newStepper setMinimumValue:0];
+    [newStepper setMaximumValue:100];
+    [newStepper addTarget:self action:@selector(stepperChanged:) forControlEvents:UIControlEventValueChanged];
+    
+    return newStepper;
+}
+
+-(void)stepperChanged:(id)sender
+{
+    NSUInteger val = [(UIStepper *)sender value];
+    if( sender == _stepperClearWater ) {
+        [_order orderClearWater:val];
+        [_contentClearWater setText:[NSString stringWithFormat:@"%lu", (unsigned long)[_order clearWater]]];
+    }
+    else if( sender == _stepperFluoride ) {
+        [_order orderFluoridedWater:val];
+        [_contentFluoride setText:[NSString stringWithFormat:@"%lu", (unsigned long)[_order fluoridedWater]]];
+    }
+    else if( sender == _stepperIodinate ) {
+        [_order orderIonidedWater:val];
+        [_contentIodinated setText:[NSString stringWithFormat:@"%lu", (unsigned long)[_order iondinatedWater]]];
+    }
+}
+
+-(UITextField *)newFieldWithPlaceholder:(NSString *) placeholder
+{
+    return [self newFieldWithPlaceholder:placeholder andKeyboard:UIKeyboardTypeDefault];
+}
+
+-(UITextField *)newFieldWithPlaceholder:(NSString *) placeholder andKeyboard:(UIKeyboardType)keyboardType
+{
+    UITextField *newField = [[UITextField alloc] init];
+    [newField setBorderStyle:UITextBorderStyleRoundedRect];
+    [newField setKeyboardType:keyboardType];
+    [newField setReturnKeyType:UIReturnKeyDone];
+    [newField setDelegate:self];
+    [newField setAutocorrectionType:UITextAutocorrectionTypeNo];
+    [newField setPlaceholder:placeholder];
+    //[newField setBackgroundColor:[UIColor grayColor]];
+    
+    return newField;
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+#pragma mark -
+#pragma mark UITableView
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return kDefaultCellHeight;
+}
+
+-(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return SECTION_COUNTER;
+}
+
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    NSInteger rowsCnt = 0;
+    switch (section) {
+        case SECTION_CLIENT:
+            rowsCnt = ITEM_CLIENTCODE_COUNTER;
+            break;
+            
+        case SECTION_ADDRESS:
+            rowsCnt = ITEM_ADDRESS_COUNTER;
+            break;
+            
+        case SECTION_CONTENT:
+            rowsCnt = ITEM_CONTENT_COUNTER;
+            break;
+            
+        case SECTION_SCHEDULE:
+            rowsCnt = ITEM_SCHEDULE_COUNTER;
+            break;
+            
+        case SECTION_COMMENTS:
+            rowsCnt = ITEM_COMMENTS_COUNTER;
+            break;
+            
+        case SECTION_CONFIRM:
+            rowsCnt = ITEM_CONFIRM_COUNTER;
+            break;
+            
+        default:
+            break;
+    }
+    
+    return rowsCnt;
+}
+
+-(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    NSString *header;
+    
+    switch (section) {
+        case SECTION_CLIENT:
+            header = @"table.section.Client";
+            break;
+            
+        case SECTION_ADDRESS:
+            header = @"table.section.Address";
+            break;
+            
+        case SECTION_CONTENT:
+            header = @"table.section.Content";
+            break;
+            
+        case SECTION_SCHEDULE:
+            header = @"table.section.Schedule";
+            break;
+            
+        case SECTION_COMMENTS:
+            header = @"table.section.Comments";
+            break;
+            
+        case SECTION_CONFIRM:
+            header = @"table.section.Confirm";
+            break;
+            
+        default:
+            break;
+    }
+
+    return header;
+}
+
+-(void)formatTextField:(UITextField *)field forCell:(UITableViewCell *)cell
+{
+//    field.frame = [[cell contentView] frame];
+//    [field changeSizeWidthDelta:BORDER_DEFAULT heightDelta:BORDER_DEFAULT];
+//    [field changeFrameXDelta:SHIFT_DEFAULT yDelta:SHIFT_DEFAULT];
+}
+
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSString *cellID = CompCellID(indexPath.section, indexPath.row);
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID];
+#define BORDER_DEFAULT -20.f
+#define SHIFT_DEFAULT 10.f
+    
+    NSLog(@"Create cell %@ ", cellID);
+    if( !cell )
+    {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellID];
+        [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+        switch (indexPath.section)
+        {
+            case SECTION_CLIENT:
+            {
+                UITextField *field = [@[_clientCode] objectAtIndex:indexPath.row];
+                field.frame = [[cell contentView] frame];
+                [field changeSizeWidthDelta:BORDER_DEFAULT heightDelta:BORDER_DEFAULT];
+                [field changeFrameXDelta:SHIFT_DEFAULT yDelta:SHIFT_DEFAULT];
+                [[cell contentView] addSubview:field];
+                break;
+            }
+            case SECTION_ADDRESS:
+            {
+                UITextField *field = [@[_addressCity,
+                                        _addressStreet,
+                                        _addressHouse,
+                                        _addressApt,
+                                        _addressContactName,
+                                        _addressContactPhone] objectAtIndex:indexPath.row];
+                field.frame = [[cell contentView] frame];
+                [field changeSizeWidthDelta:BORDER_DEFAULT heightDelta:BORDER_DEFAULT];
+                [field changeFrameXDelta:SHIFT_DEFAULT yDelta:SHIFT_DEFAULT];
+                [[cell contentView] addSubview:field];
+                break;
+            }
+                
+            case SECTION_CONTENT:
+            {
+                UIStepper *stepper = [@[_stepperClearWater,
+                                        _stepperFluoride,
+                                        _stepperIodinate] objectAtIndex:indexPath.row];
+                [stepper setFrameX:CGRectGetWidth([[cell contentView] bounds]) - CGRectGetWidth([stepper bounds]) - SHIFT_DEFAULT
+                            andY:SHIFT_DEFAULT];
+                [[cell contentView] addSubview:stepper];
+
+                UILabel *label = [@[_contentClearWater,
+                                    _contentFluoride,
+                                    _contentIodinated] objectAtIndex:indexPath.row];
+                [label setFrame:[stepper frame]];
+                [label setFrameX:CGRectGetMinX([stepper frame]) - CGRectGetWidth([label bounds]) - SHIFT_DEFAULT
+                            andY:SHIFT_DEFAULT];
+                [[cell contentView] addSubview:label];
+                // place text labels and values
+                switch (indexPath.row)
+                {
+                    case ITEM_CONTENT_CLEARWATER:
+                    {
+                        [label setText:[NSString stringWithFormat:@"%li", [_order clearWater]]];
+                        [[cell textLabel] setText:LOC(@"cellText.ClearWater")];
+                        break;
+                    }
+                    case ITEM_CONTENT_FLUORIDATED:
+                    {
+                        [label setText:[NSString stringWithFormat:@"%li", [_order fluoridedWater]]];
+                        [[cell textLabel] setText:LOC(@"cellText.FluoridedWater")];
+                        break;
+                    }
+                    case ITEM_CONTENT_IODINATED:
+                    {
+                        [label setText:[NSString stringWithFormat:@"%li", [_order iondinatedWater]]];
+                        [[cell textLabel] setText:LOC(@"cellText.IodinatedWater")];
+                        break;
+                    }
+                    default:
+                        break;
+                }
+
+                break;
+            }
+            case SECTION_SCHEDULE:
+            {
+                UITextField *field = [@[_scheduleTime,
+                                        _scheduleDate] objectAtIndex:indexPath.row];
+                field.frame = [[cell contentView] frame];
+                [[cell contentView] addSubview:field];
+                break;
+            }
+            case SECTION_COMMENTS:
+            {
+                UITextField *field = [@[_orderComments] objectAtIndex:indexPath.row];
+                field.frame = [[cell contentView] frame];
+                [field changeSizeWidthDelta:BORDER_DEFAULT heightDelta:BORDER_DEFAULT];
+                [field changeFrameXDelta:SHIFT_DEFAULT yDelta:SHIFT_DEFAULT];
+                [[cell contentView] addSubview:field];
+                break;
+            }
+            case SECTION_CONFIRM:
+            {
+                UITextField *field = [@[_confirmSMS,
+                                        _confirmPhone,
+                                        _confirmEmail] objectAtIndex:indexPath.row];
+                field.frame = [[cell contentView] frame];
+                [field changeSizeWidthDelta:BORDER_DEFAULT heightDelta:BORDER_DEFAULT];
+                [field changeFrameXDelta:SHIFT_DEFAULT yDelta:SHIFT_DEFAULT];
+                [[cell contentView] addSubview:field];
+                break;
+            }
+            default:
+                break;
+        }
+        
+    }
+    
+    return  cell;
+}
+
+#pragma mark -
+#pragma mark UITextField
+-(BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [textField resignFirstResponder];
+    return NO;
+}
+
+-(void)textFieldDidEndEditing:(UITextField *)textField
+{
+    NSLog(@"");
+}
+
+#pragma mark -
+#pragma mark Keyboard events
+-(void)keyboardWillAppear:(NSNotification *)notification
+{
+    // only change UI if keyboard was invisible
+    if( _isKBVisible ) {
+        return;
+    }
+    
+    // will shift view UP to make text fields visible
+    NSDictionary *info = [notification userInfo];
+    CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    [self handleKeyboardAppearWithSize:kbSize];
+}
+
+-(void)keyboardWillDisappear:(NSNotification *)notification
+{
+    [self handleKeyboardHiding];
+}
+
+-(void)handleKeyboardHiding
+{
+    _isKBVisible = NO;
+    // will shift view DOWN on keyboard disappear
+    [UIView animateWithDuration:.2f animations:^{
+        [[self view] changeFrameXDelta:.0f yDelta:_viewShiftDelta];
+        _viewShiftDelta = .0f;
+    } completion:^(BOOL finished) {
+    }];
+}
+
+-(void)handleKeyboardAppearWithSize:(CGSize)kbSize
+{
+    CGFloat bottomHeight = CGRectGetHeight([[UIScreen mainScreen] bounds]) - CGRectGetMaxY([[self btnSendOrder] frame]);
+    
+    CGFloat kbHeight = kbSize.height;
+    _viewShiftDelta = kbHeight - bottomHeight + [UIApplication sharedApplication].statusBarFrame.size.height;
+    // if keyboard is higher than Login button bottom line shift UI to this delta
+    if( _viewShiftDelta > 0 ) {
+        [UIView animateWithDuration:.2f animations:^{
+            [[self view] changeFrameXDelta:.0f yDelta:-_viewShiftDelta];
+        } completion:^(BOOL finished) {
+            if(finished){
+                _isKBVisible = YES;
+            }
+        }];
+    }
+}
+
+-(void)willResignActive:(NSNotification *)notification
+{
+    if( _isKBVisible ) {
+//        [[self userPass] resignFirstResponder];
+//        [[self userName] resignFirstResponder];
+    }
+}
+
+-(IBAction)sendOrderTapped:(id)sender
+{
+    if( ![self checkFields] ) {
+        return;
+    }
+    
+    [self fillOrder];
+}
+
+-(void)fillOrder
+{
+    [_order setClientCode:[_clientCode text]];
+    [_order setAddressCity:[_addressCity text]];
+    [_order setAddressStreet:[_addressStreet text]];
+    [_order setAddressHouse:[_addressHouse text]];
+    [_order setAddressApt:[_addressApt text]];
+    [_order setAddressContactPhone:[_addressContactPhone text]];
+    [_order setAddressContactName:[_addressContactName text]];
+    [_order setScheduleTime:[_scheduleTime text]];
+    [_order setScheduleDate:[_scheduleDate text]];
+//    [_order setContentClearWater;
+//    [_order setContentFluorided;
+//    [_order setContentIodinated;
+    [_order setConfirmSMS:[_confirmSMS text]];
+    [_order setConfirmPhone:[_confirmPhone text]];
+    [_order setConfirmEmail:[_confirmEmail text]];
+    [_order setOrderComments:[_orderComments text]];
+}
+
+-(BOOL)checkFields
+{
+    BOOL isOK = YES;
+    
+    if( [[_addressStreet text] length] == 0 ) {
+        isOK = NO;
+        [self showError:LOC(@"error.NotAllFieldsFilled")];
+    }
+    if( [[_addressHouse text] length] == 0 ) {
+        isOK = NO;
+        [self showError:LOC(@"error.NotAllFieldsFilled")];
+    }
+    if( [[_addressContactName text] length] == 0 ) {
+        isOK = NO;
+        [self showError:LOC(@"error.NotAllFieldsFilled")];
+    }
+    if( [[_addressContactPhone text] length] == 0 ) {
+        isOK = NO;
+        [self showError:LOC(@"error.NotAllFieldsFilled")];
+    }
+    if( [[_scheduleDate text] length] == 0 ) {
+        isOK = NO;
+        [self showError:LOC(@"error.NotAllFieldsFilled")];
+    }
+    if( [[_scheduleTime text] length] == 0 ) {
+        isOK = NO;
+        [self showError:LOC(@"error.NotAllFieldsFilled")];
+    }
+    if( ([_order clearWater] + [_order fluoridedWater] + [_order iondinatedWater]) < 2 ) {
+        isOK = NO;
+        [self showError:LOC(@"error.NotEnoughItemsOrdered")];
+    }
+    
+    return isOK;
+}
+
+-(void)showError:(NSString *)message
+{
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:LOC(@"title.Error") message:message preferredStyle:UIAlertControllerStyleAlert];
+    [alert addAction:[UIAlertAction actionWithTitle:LOC(@"button.OK") style:UIAlertActionStyleDefault handler:nil]];
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
+@end
