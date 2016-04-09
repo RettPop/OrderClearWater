@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface OrderModel : NSObject
+@interface OrderModel : NSObject<NSCoding>
 
 -(NSInteger)clearWater;
 -(NSInteger)fluoridedWater;
@@ -16,6 +16,7 @@
 -(void)orderClearWater:(NSUInteger)amount;
 -(void)orderFluoridedWater:(NSUInteger)amount;
 -(void)orderIonidedWater:(NSUInteger)amount;
+-(NSDictionary *)valuesDict;
 
 @property (strong, nonatomic) NSString *clientCode;
 @property (strong, nonatomic) NSString *addressCity;

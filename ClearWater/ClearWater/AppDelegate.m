@@ -8,6 +8,15 @@
 
 #import "AppDelegate.h"
 
+@implementation NSMutableURLRequest (NSURLRequestWithIgnoreSSL)
+
++ (BOOL)allowsAnyHTTPSCertificateForHost:(NSString *)host
+{
+    return YES;
+}
+
+@end
+
 @interface AppDelegate ()
 
 @end

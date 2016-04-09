@@ -10,6 +10,7 @@
 #import "UIKit/UITableView.h"
 #import "UIView+SSUIViewCategory.h"
 #import "OrderModel.h"
+#import "ServerHandler.h"
 
 typedef enum : NSUInteger {
     SECTION_CLIENT,
@@ -50,8 +51,7 @@ typedef enum : NSUInteger {
 #define kTableGeneralCellID @"kTableGeneralCellID"
 #define CompCellID(x,y) [NSString stringWithFormat:@"SECTION %li ITEM %li", x, y]
 #define kDefaultCellHeight 60.f
-#define LOC(__key__) [[NSBundle mainBundle] localizedStringForKey:(__key__) value:nil table:nil]
-
+#define kUserDefsKeyLastOrder @"LastOrder"
 
 @interface VCEditOrder ()
 {
@@ -74,9 +74,9 @@ typedef enum : NSUInteger {
 @property (strong, nonatomic) UITextField *addressContactPhone;
 @property (strong, nonatomic) UITextField *scheduleTime;
 @property (strong, nonatomic) UITextField *scheduleDate;
-@property (strong, nonatomic) UILabel *contentClearWater;
-@property (strong, nonatomic) UILabel *contentFluoride;
-@property (strong, nonatomic) UILabel *contentIodinated;
+@property (strong, nonatomic) UILabel     *contentClearWater;
+@property (strong, nonatomic) UILabel     *contentFluoride;
+@property (strong, nonatomic) UILabel     *contentIodinated;
 @property (strong, nonatomic) UITextField *confirmSMS;
 @property (strong, nonatomic) UITextField *confirmPhone;
 @property (strong, nonatomic) UITextField *confirmEmail;
@@ -96,7 +96,7 @@ typedef enum : NSUInteger {
     [self initFields];
     _order = [[OrderModel alloc] init];
     [[self navigationItem] setTitle:LOC(@"Clear Water")];
-    [[self navigationItem] setRightBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:LOC(@"Restore") style:UIBarButtonItemStylePlain target:nil action:nil]];
+    [[self navigationItem] setRightBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:LOC(@"Restore") style:UIBarButtonItemStylePlain target:self action:@selector(restoreOrderTapped:)]];
 
     // handle keyboard appearance to change UI layout
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -113,7 +113,18 @@ typedef enum : NSUInteger {
                                              selector:@selector(willResignActive:)
                                                  name:UIApplicationWillResignActiveNotification
                                                object:nil];
+}
 
+-(void)restoreOrderTapped:(id)sender
+{
+    OrderModel* model = [self restoreOrder];
+    if( model ) {
+        [self fillUIFromOrder:model];
+        _order = model;
+    }
+    else {
+        [self showError:@"No previously sent orders found"];
+    }
 }
 
 -(void)initFields
@@ -211,6 +222,123 @@ typedef enum : NSUInteger {
     // Pass the selected object to the new view controller.
 }
 */
+
+-(IBAction)sendOrderTapped:(id)sender
+{
+    if( ![self checkFields] ) {
+        return;
+    }
+    
+    //  Delete after tests. Only successfuly sent Order is tended to be stored
+    [self storeOrder:_order];
+    
+    [self fillOrderFromUI];
+    [[ServerHandler sharedInstance] sendOrder:_order];
+    
+    //  Uncomment after tests. Only successfuly sent Order is tended to be stored
+    //    [self storeOrder:_order];
+}
+
+-(void)storeOrder:(OrderModel *)order
+{
+    NSUserDefaults *def = [NSUserDefaults standardUserDefaults];
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:_order];
+    [def setObject:data forKey:kUserDefsKeyLastOrder];
+}
+
+-(OrderModel *)restoreOrder
+{
+    NSUserDefaults *def = [NSUserDefaults standardUserDefaults];
+    NSData *data = [def valueForKey:kUserDefsKeyLastOrder];
+    OrderModel *model = nil;
+    if( data ) {
+        model = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+    }
+    
+    return model;
+}
+
+-(void)fillOrderFromUI
+{
+    [_order setClientCode:[_clientCode text]];
+    [_order setAddressCity:[_addressCity text]];
+    [_order setAddressStreet:[_addressStreet text]];
+    [_order setAddressHouse:[_addressHouse text]];
+    [_order setAddressApt:[_addressApt text]];
+    [_order setAddressContactPhone:[_addressContactPhone text]];
+    [_order setAddressContactName:[_addressContactName text]];
+    [_order setScheduleTime:[_scheduleTime text]];
+    [_order setScheduleDate:[_scheduleDate text]];
+    //    [_order setContentClearWater;
+    //    [_order setContentFluorided;
+    //    [_order setContentIodinated;
+    [_order setConfirmSMS:[_confirmSMS text]];
+    [_order setConfirmPhone:[_confirmPhone text]];
+    [_order setConfirmEmail:[_confirmEmail text]];
+    [_order setOrderComments:[_orderComments text]];
+}
+
+-(void)fillUIFromOrder:(OrderModel *)order
+{
+    
+    [_clientCode setText: [order clientCode]];
+    [_addressCity setText: [order addressCity]];
+    [_addressStreet setText: [order addressStreet]];
+    [_addressHouse setText: [order addressHouse]];
+    [_addressApt setText: [order addressApt]];
+    [_addressContactName setText: [order addressContactPhone]];
+    [_addressContactPhone setText: [order addressContactPhone]];
+    [_scheduleTime setText: [order scheduleTime]];
+    [_scheduleDate setText: [order scheduleDate]];
+    [_confirmSMS setText: [order confirmSMS]];
+    [_confirmPhone setText: [order confirmPhone]];
+    [_confirmEmail setText: [order confirmEmail]];
+    [_orderComments setText: [order orderComments]];
+    
+    // Buttles numbers are stored as numbers
+    [_stepperClearWater setValue: [order clearWater]];
+    [_stepperFluoride setValue: [order fluoridedWater]];
+    [_stepperIodinate setValue: [order iondinatedWater]];
+    [_contentClearWater setText: [[order contentClearWater] stringValue]];
+    [_contentFluoride setText: [[order contentFluorided] stringValue]];
+    [_contentIodinated setText: [[order contentIodinated] stringValue]];
+}
+
+-(BOOL)checkFields
+{
+    BOOL isOK = YES;
+    
+    if( [[_addressStreet text] length] == 0 ) {
+        isOK = NO;
+        [self showError:LOC(@"error.NotAllFieldsFilled")];
+    }
+    if( [[_addressHouse text] length] == 0 ) {
+        isOK = NO;
+        [self showError:LOC(@"error.NotAllFieldsFilled")];
+    }
+    if( [[_addressContactName text] length] == 0 ) {
+        isOK = NO;
+        [self showError:LOC(@"error.NotAllFieldsFilled")];
+    }
+    if( [[_addressContactPhone text] length] == 0 ) {
+        isOK = NO;
+        [self showError:LOC(@"error.NotAllFieldsFilled")];
+    }
+    if( [[_scheduleDate text] length] == 0 ) {
+        isOK = NO;
+        [self showError:LOC(@"error.NotAllFieldsFilled")];
+    }
+    if( [[_scheduleTime text] length] == 0 ) {
+        isOK = NO;
+        [self showError:LOC(@"error.NotAllFieldsFilled")];
+    }
+    if( ([_order clearWater] + [_order fluoridedWater] + [_order iondinatedWater]) < 2 ) {
+        isOK = NO;
+        [self showError:LOC(@"error.NotEnoughItemsOrdered")];
+    }
+    
+    return isOK;
+}
 
 #pragma mark -
 #pragma mark UITableView
@@ -314,6 +442,7 @@ typedef enum : NSUInteger {
     {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellID];
         [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+        
         switch (indexPath.section)
         {
             case SECTION_CLIENT:
@@ -488,71 +617,6 @@ typedef enum : NSUInteger {
 //        [[self userPass] resignFirstResponder];
 //        [[self userName] resignFirstResponder];
     }
-}
-
--(IBAction)sendOrderTapped:(id)sender
-{
-    if( ![self checkFields] ) {
-        return;
-    }
-    
-    [self fillOrder];
-}
-
--(void)fillOrder
-{
-    [_order setClientCode:[_clientCode text]];
-    [_order setAddressCity:[_addressCity text]];
-    [_order setAddressStreet:[_addressStreet text]];
-    [_order setAddressHouse:[_addressHouse text]];
-    [_order setAddressApt:[_addressApt text]];
-    [_order setAddressContactPhone:[_addressContactPhone text]];
-    [_order setAddressContactName:[_addressContactName text]];
-    [_order setScheduleTime:[_scheduleTime text]];
-    [_order setScheduleDate:[_scheduleDate text]];
-//    [_order setContentClearWater;
-//    [_order setContentFluorided;
-//    [_order setContentIodinated;
-    [_order setConfirmSMS:[_confirmSMS text]];
-    [_order setConfirmPhone:[_confirmPhone text]];
-    [_order setConfirmEmail:[_confirmEmail text]];
-    [_order setOrderComments:[_orderComments text]];
-}
-
--(BOOL)checkFields
-{
-    BOOL isOK = YES;
-    
-    if( [[_addressStreet text] length] == 0 ) {
-        isOK = NO;
-        [self showError:LOC(@"error.NotAllFieldsFilled")];
-    }
-    if( [[_addressHouse text] length] == 0 ) {
-        isOK = NO;
-        [self showError:LOC(@"error.NotAllFieldsFilled")];
-    }
-    if( [[_addressContactName text] length] == 0 ) {
-        isOK = NO;
-        [self showError:LOC(@"error.NotAllFieldsFilled")];
-    }
-    if( [[_addressContactPhone text] length] == 0 ) {
-        isOK = NO;
-        [self showError:LOC(@"error.NotAllFieldsFilled")];
-    }
-    if( [[_scheduleDate text] length] == 0 ) {
-        isOK = NO;
-        [self showError:LOC(@"error.NotAllFieldsFilled")];
-    }
-    if( [[_scheduleTime text] length] == 0 ) {
-        isOK = NO;
-        [self showError:LOC(@"error.NotAllFieldsFilled")];
-    }
-    if( ([_order clearWater] + [_order fluoridedWater] + [_order iondinatedWater]) < 2 ) {
-        isOK = NO;
-        [self showError:LOC(@"error.NotEnoughItemsOrdered")];
-    }
-    
-    return isOK;
 }
 
 -(void)showError:(NSString *)message

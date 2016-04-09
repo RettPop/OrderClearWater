@@ -15,6 +15,7 @@
 		7B558D8B1CB6AAEC007B0776 /* VCEditOrder.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B558D8A1CB6AAEC007B0776 /* VCEditOrder.m */; };
 		7B558D8E1CB6DF69007B0776 /* OrderModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B558D8D1CB6DF69007B0776 /* OrderModel.m */; };
 		7B558D911CB6F1CE007B0776 /* UIView+SSUIViewCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B558D901CB6F1CE007B0776 /* UIView+SSUIViewCategory.m */; };
+		7B558D941CB7BC51007B0776 /* ServerHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B558D931CB7BC51007B0776 /* ServerHandler.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,10 @@
 		7B558D8D1CB6DF69007B0776 /* OrderModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OrderModel.m; sourceTree = "<group>"; };
 		7B558D8F1CB6F1CE007B0776 /* UIView+SSUIViewCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+SSUIViewCategory.h"; sourceTree = "<group>"; };
 		7B558D901CB6F1CE007B0776 /* UIView+SSUIViewCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+SSUIViewCategory.m"; sourceTree = "<group>"; };
+		7B558D921CB7BC51007B0776 /* ServerHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServerHandler.h; sourceTree = "<group>"; };
+		7B558D931CB7BC51007B0776 /* ServerHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServerHandler.m; sourceTree = "<group>"; };
+		7B558D951CB7D0AE007B0776 /* CWConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWConstants.h; sourceTree = "<group>"; };
+		7B558D961CB7D0E4007B0776 /* CWPrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWPrefixHeader.pch; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +82,10 @@
 				7B558D6C1CB695F9007B0776 /* Supporting Files */,
 				7B558D8C1CB6DF69007B0776 /* OrderModel.h */,
 				7B558D8D1CB6DF69007B0776 /* OrderModel.m */,
+				7B558D921CB7BC51007B0776 /* ServerHandler.h */,
+				7B558D931CB7BC51007B0776 /* ServerHandler.m */,
+				7B558D951CB7D0AE007B0776 /* CWConstants.h */,
+				7B558D961CB7D0E4007B0776 /* CWPrefixHeader.pch */,
 			);
 			path = ClearWater;
 			sourceTree = "<group>";
@@ -164,6 +173,7 @@
 				7B558D6E1CB695FA007B0776 /* main.m in Sources */,
 				7B558D911CB6F1CE007B0776 /* UIView+SSUIViewCategory.m in Sources */,
 				7B558D8B1CB6AAEC007B0776 /* VCEditOrder.m in Sources */,
+				7B558D941CB7BC51007B0776 /* ServerHandler.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -275,6 +285,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				GCC_PREFIX_HEADER = ClearWater/CWPrefixHeader.pch;
 				INFOPLIST_FILE = ClearWater/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sapisoft.ClearWater;
@@ -286,6 +297,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				GCC_PREFIX_HEADER = ClearWater/CWPrefixHeader.pch;
 				INFOPLIST_FILE = ClearWater/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sapisoft.ClearWater;
@@ -312,6 +324,7 @@
 				7B558D821CB695FA007B0776 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

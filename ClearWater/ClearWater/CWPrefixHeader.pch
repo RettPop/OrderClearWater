@@ -1,0 +1,16 @@
+//
+//  CWPrefixHeader.pch
+//  ClearWater
+//
+//  Created by Rett Pop on 2016-04-08.
+//  Copyright © 2016 SapiSoft. All rights reserved.
+//
+
+#ifndef CWPrefixHeader_pch
+#define CWPrefixHeader_pch
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+#include "CWConstants.h"
+
+#endif /* CWPrefixHeader_pch */

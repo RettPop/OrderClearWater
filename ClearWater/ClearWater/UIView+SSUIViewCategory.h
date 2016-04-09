@@ -21,6 +21,7 @@
 -(void)alignHorizontalsWithMasterView:(UIView*)master;
 -(void)alignVerticalsWithMasterView:(UIView*)master;
 -(void)borderWithColor:(UIColor *)color borderWidth:(CGFloat)borderWidth;
+-(void)addDebugBorder;
 -(void)setWidthFromMasterView:(UIView*)master;
 -(void)setHeightFromMasterView:(UIView*)master;
 @end

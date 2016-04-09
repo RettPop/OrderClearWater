@@ -95,4 +95,9 @@
     self.layer.borderColor = color.CGColor;
 }
 
+-(void)addDebugBorder
+{
+    [self borderWithColor:[UIColor redColor] borderWidth:3.f];
+}
+
 @end
