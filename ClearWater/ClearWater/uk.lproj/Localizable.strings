@@ -31,8 +31,11 @@
 
 "table.section.Client" = "Клиент";
 "table.section.Address" = "Адреса";
-"table.section.Content" = "Пляшки";
+"table.section.Content" = "Пляшки (якнайменш 2 пляшки)";
 "table.section.Schedule" = "Розклад доставки";
 "table.section.Comments" = "Коментар";
 "table.section.Confirm" = "Пiдтвердження заказу";
 
+"message.OrderWasSent" = "Замова була вдало вiдправлено.";
+"title.Success" = "Радiсть";
+"message.ErrorSendingOrder" = "Помилка вiдправки замови. Спробуйте ще раз.";

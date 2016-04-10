@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		7B3898741CBB0CBA0062ECE1 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7B3898761CBB0CBA0062ECE1 /* Localizable.strings */; };
+		7B38987C1CBB19880062ECE1 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B38987A1CBB19880062ECE1 /* Fabric.framework */; };
+		7B38987D1CBB19880062ECE1 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B38987B1CBB19880062ECE1 /* Crashlytics.framework */; };
 		7B558D6E1CB695FA007B0776 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B558D6D1CB695FA007B0776 /* main.m */; };
 		7B558D711CB695FA007B0776 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B558D701CB695FA007B0776 /* AppDelegate.m */; };
 		7B558D771CB695FA007B0776 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7B558D751CB695FA007B0776 /* Main.storyboard */; };
@@ -25,6 +27,8 @@
 		7B3898751CBB0CBA0062ECE1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		7B3898771CBB0CCA0062ECE1 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		7B3898781CBB0CD90062ECE1 /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/Localizable.strings; sourceTree = "<group>"; };
+		7B38987A1CBB19880062ECE1 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
+		7B38987B1CBB19880062ECE1 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		7B558D691CB695F9007B0776 /* ClearWater.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ClearWater.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7B558D6D1CB695FA007B0776 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		7B558D6F1CB695FA007B0776 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -54,6 +58,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7B38987D1CBB19880062ECE1 /* Crashlytics.framework in Frameworks */,
+				7B38987C1CBB19880062ECE1 /* Fabric.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,6 +71,8 @@
 			children = (
 				7B558D6B1CB695F9007B0776 /* ClearWater */,
 				7B558D6A1CB695F9007B0776 /* Products */,
+				7B38987A1CBB19880062ECE1 /* Fabric.framework */,
+				7B38987B1CBB19880062ECE1 /* Crashlytics.framework */,
 			);
 			sourceTree = "<group>";
 		};
@@ -123,6 +131,7 @@
 				7B558D651CB695F8007B0776 /* Sources */,
 				7B558D661CB695F8007B0776 /* Frameworks */,
 				7B558D671CB695F8007B0776 /* Resources */,
+				7B3898791CBB19630062ECE1 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -180,6 +189,22 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		7B3898791CBB19630062ECE1 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "./Fabric.framework/run 554ee819c527e61b838fa4f10f1acab1e7304b92 87196845778a2b350212654d91c8ffb3a199bbc785862a177d9fbaec1d8c4558";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		7B558D651CB695F8007B0776 /* Sources */ = {
@@ -315,6 +340,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				GCC_PREFIX_HEADER = ClearWater/CWPrefixHeader.pch;
 				INFOPLIST_FILE = ClearWater/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -327,6 +356,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				GCC_PREFIX_HEADER = ClearWater/CWPrefixHeader.pch;
 				INFOPLIST_FILE = ClearWater/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

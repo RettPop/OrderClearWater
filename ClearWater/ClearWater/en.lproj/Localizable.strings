@@ -31,7 +31,10 @@
 
 "table.section.Client" = "Client";
 "table.section.Address" = "Address";
-"table.section.Content" = "Bottles";
+"table.section.Content" = "Bottles (at least 2 items)";
 "table.section.Schedule" = "Delivery schedule";
 "table.section.Comments" = "Comments";
 "table.section.Confirm" = "Order confirmation";
+"message.OrderWasSent" = "Order was successfuly sent";
+"title.Success" = "Success";
+"message.ErrorSendingOrder" = "Error sending order. Try again later.";

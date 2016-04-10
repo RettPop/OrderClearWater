@@ -31,8 +31,11 @@
 
 "table.section.Client" = "Клиент";
 "table.section.Address" = "Адрес";
-"table.section.Content" = "Бутыли";
+"table.section.Content" = "Бутыли (минимально 2 бутыли)";
 "table.section.Schedule" = "Расписание доставки";
 "table.section.Comments" = "Комментарий";
 "table.section.Confirm" = "Подтверждение заказа";
 
+"message.OrderWasSent" = "Заказ был успешно отправлен.";
+"title.Success" = "Успешно";
+"message.ErrorSendingOrder" = "Ошибка отправки заказа. Попробуйте позже.";
