@@ -16,6 +16,8 @@
 		7B558D8E1CB6DF69007B0776 /* OrderModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B558D8D1CB6DF69007B0776 /* OrderModel.m */; };
 		7B558D911CB6F1CE007B0776 /* UIView+SSUIViewCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B558D901CB6F1CE007B0776 /* UIView+SSUIViewCategory.m */; };
 		7B558D941CB7BC51007B0776 /* ServerHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B558D931CB7BC51007B0776 /* ServerHandler.m */; };
+		7B558D991CBA85F4007B0776 /* CWAddress.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B558D981CBA85F4007B0776 /* CWAddress.m */; };
+		7B558D9C1CBA8852007B0776 /* CWSchedule.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B558D9B1CBA8852007B0776 /* CWSchedule.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,6 +39,10 @@
 		7B558D931CB7BC51007B0776 /* ServerHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServerHandler.m; sourceTree = "<group>"; };
 		7B558D951CB7D0AE007B0776 /* CWConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWConstants.h; sourceTree = "<group>"; };
 		7B558D961CB7D0E4007B0776 /* CWPrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWPrefixHeader.pch; sourceTree = "<group>"; };
+		7B558D971CBA85F4007B0776 /* CWAddress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWAddress.h; sourceTree = "<group>"; };
+		7B558D981CBA85F4007B0776 /* CWAddress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWAddress.m; sourceTree = "<group>"; };
+		7B558D9A1CBA8852007B0776 /* CWSchedule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWSchedule.h; sourceTree = "<group>"; };
+		7B558D9B1CBA8852007B0776 /* CWSchedule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWSchedule.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,6 +81,8 @@
 				7B558D8F1CB6F1CE007B0776 /* UIView+SSUIViewCategory.h */,
 				7B558D901CB6F1CE007B0776 /* UIView+SSUIViewCategory.m */,
 				7B558D8A1CB6AAEC007B0776 /* VCEditOrder.m */,
+				7B558D9A1CBA8852007B0776 /* CWSchedule.h */,
+				7B558D9B1CBA8852007B0776 /* CWSchedule.m */,
 				7B558D751CB695FA007B0776 /* Main.storyboard */,
 				7B558D781CB695FA007B0776 /* Assets.xcassets */,
 				7B558D7A1CB695FA007B0776 /* LaunchScreen.storyboard */,
@@ -86,6 +94,8 @@
 				7B558D931CB7BC51007B0776 /* ServerHandler.m */,
 				7B558D951CB7D0AE007B0776 /* CWConstants.h */,
 				7B558D961CB7D0E4007B0776 /* CWPrefixHeader.pch */,
+				7B558D971CBA85F4007B0776 /* CWAddress.h */,
+				7B558D981CBA85F4007B0776 /* CWAddress.m */,
 			);
 			path = ClearWater;
 			sourceTree = "<group>";
@@ -168,11 +178,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7B558D991CBA85F4007B0776 /* CWAddress.m in Sources */,
 				7B558D8E1CB6DF69007B0776 /* OrderModel.m in Sources */,
 				7B558D711CB695FA007B0776 /* AppDelegate.m in Sources */,
 				7B558D6E1CB695FA007B0776 /* main.m in Sources */,
 				7B558D911CB6F1CE007B0776 /* UIView+SSUIViewCategory.m in Sources */,
 				7B558D8B1CB6AAEC007B0776 /* VCEditOrder.m in Sources */,
+				7B558D9C1CBA8852007B0776 /* CWSchedule.m in Sources */,
 				7B558D941CB7BC51007B0776 /* ServerHandler.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

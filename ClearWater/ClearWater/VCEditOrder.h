@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface VCEditOrder : UIViewController<UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate>
+@interface VCEditOrder : UIViewController<UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource>
 
 @end
