@@ -30,14 +30,13 @@
     NSMutableURLRequest *uploadReq = [self prepReqestWithParams:orderAsParams];
     [uploadReq setURL:[NSURL URLWithString:SERVER_URL]];
     
-    NSHTTPURLResponse *resp = [self sendRequest:uploadReq];
-    return [self checkHTTPResponse:resp];
+    NSMutableData *respData = [[NSMutableData alloc] init];
+    NSHTTPURLResponse *resp = [self sendRequest:uploadReq dataStorage:respData];
+    return [self checkHTTPResponse:resp withData:respData];
 }
 
 -(NSHTTPURLResponse *)sendRequest:(NSURLRequest *)request dataStorage:(NSMutableData *)dataStorage
 {
-    NSHTTPURLResponse *urlResp = nil;
-    NSError *err = nil;
     DLog(@"Request header:\n{%@}", [request allHTTPHeaderFields]);
     NSString *logStr = [[NSString alloc] initWithData:[request HTTPBody] encoding:NSUTF8StringEncoding];
     DLog(@"Request body length: %lu, content:\n{%@}", (unsigned long)[[request HTTPBody] length], logStr);
@@ -45,15 +44,23 @@
     
     NSURLSessionConfiguration *config = [NSURLSessionConfiguration ephemeralSessionConfiguration];
     NSURLSession *session = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:nil];
+    NSHTTPURLResponse *urlResp = nil;
+    NSError *err = nil;
     
-    NSData *respData = [self sendSynchronousRequest:request session:session returningResponse:&urlResp error:&err];
-    DLog(@"Response header:\n{%@}", urlResp);
-    NSSTring *respDataStr = [[NSString alloc] initWithData:respData encoding:NSUTF8StringEncoding];
-    DLog(@"Response body:\n{%@}", respDataStr);
+    NSData *respData = [self sendSynchronousRequest:request
+                                            session:session
+                                  returningResponse:&urlResp
+                                              error:&err];
+    if( respData )
+    {
+        DLog(@"Response header:\n{%@}", urlResp);
+        NSSTring *respDataStr = [[NSString alloc] initWithData:respData encoding:NSUTF8StringEncoding];
+        DLog(@"Response body:\n{%@}", respDataStr);
 
-    // fill target data with received data if needed
-    if( dataStorage ) {
-        [dataStorage setData:respData];
+        // fill target data with received data if needed
+        if( dataStorage ) {
+            [dataStorage setData:respData];
+        }
     }
 
     return urlResp;
@@ -72,33 +79,55 @@
     sem = dispatch_semaphore_create(0);
     
     [[session dataTaskWithRequest:request
-                                     completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-                                         if (errorPtr != NULL) {
-                                             *errorPtr = error;
-                                         }
-                                         if (responsePtr != NULL) {
-                                             *responsePtr = response;
-                                         }  
-                                         if (error == nil) {  
-                                             result = data;  
-                                         }  
-                                         dispatch_semaphore_signal(sem);  
-                                     }] resume];  
+                completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+                         if (errorPtr != NULL) {
+                             *errorPtr = error;
+                         }
+                         if (responsePtr != NULL) {
+                             *responsePtr = response;
+                         }  
+                         if (error == nil) {  
+                             result = data;  
+                         }  
+                         dispatch_semaphore_signal(sem);  
+                     }]
+     resume];
     
-    dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);  
+    // wait for 5 seconds
+    dispatch_semaphore_wait(sem, dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)));
     
     return result;  
 }
 
--(BOOL)checkHTTPResponse:(NSHTTPURLResponse *)response
+-(BOOL)checkHTTPResponse:(NSHTTPURLResponse *)response withData:(NSData *)data
 {
-    BOOL isOK = ([response statusCode] == 200);
+    if( !response ) {
+        return NO;
+    }
+    
+    //response whould contain HTTP_OK200 and body should contain one of "OK", "MAIL", "POST" strings.
+    
+    BOOL isOK = FALSE;
+
+    NSString *dataString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    if(   [dataString localizedCaseInsensitiveContainsString:@"OK"]
+       || [dataString localizedCaseInsensitiveContainsString:@"MAIL"]
+       || [dataString localizedCaseInsensitiveContainsString:@"POST"] )
+    {
+        // to simplify condition above
+        if( [response statusCode] == 200 ) {
+            isOK = YES;
+        }
+    }
     
     DLog(@"Response is %@", isOK ? @"OK" : @"BAD");
     return isOK;
 }
 
--(void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable))completionHandler
+-(void)URLSession:(NSURLSession *)session
+             task:(NSURLSessionTask *)task
+didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
+completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable))completionHandler
 {
     if([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust])
     {
