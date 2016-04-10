@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7B3898741CBB0CBA0062ECE1 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7B3898761CBB0CBA0062ECE1 /* Localizable.strings */; };
 		7B558D6E1CB695FA007B0776 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B558D6D1CB695FA007B0776 /* main.m */; };
 		7B558D711CB695FA007B0776 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B558D701CB695FA007B0776 /* AppDelegate.m */; };
 		7B558D771CB695FA007B0776 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7B558D751CB695FA007B0776 /* Main.storyboard */; };
@@ -21,6 +22,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7B3898751CBB0CBA0062ECE1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		7B3898771CBB0CCA0062ECE1 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
+		7B3898781CBB0CD90062ECE1 /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/Localizable.strings; sourceTree = "<group>"; };
 		7B558D691CB695F9007B0776 /* ClearWater.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ClearWater.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7B558D6D1CB695FA007B0776 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		7B558D6F1CB695FA007B0776 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -104,6 +108,7 @@
 			isa = PBXGroup;
 			children = (
 				7B558D6D1CB695FA007B0776 /* main.m */,
+				7B3898761CBB0CBA0062ECE1 /* Localizable.strings */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -149,6 +154,8 @@
 			knownRegions = (
 				en,
 				Base,
+				ru,
+				uk,
 			);
 			mainGroup = 7B558D601CB695F8007B0776;
 			productRefGroup = 7B558D6A1CB695F9007B0776 /* Products */;
@@ -165,6 +172,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7B3898741CBB0CBA0062ECE1 /* Localizable.strings in Resources */,
 				7B558D7C1CB695FA007B0776 /* LaunchScreen.storyboard in Resources */,
 				7B558D791CB695FA007B0776 /* Assets.xcassets in Resources */,
 				7B558D771CB695FA007B0776 /* Main.storyboard in Resources */,
@@ -192,6 +200,16 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		7B3898761CBB0CBA0062ECE1 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				7B3898751CBB0CBA0062ECE1 /* en */,
+				7B3898771CBB0CCA0062ECE1 /* ru */,
+				7B3898781CBB0CD90062ECE1 /* uk */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
 		7B558D751CB695FA007B0776 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (

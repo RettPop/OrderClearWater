@@ -20,7 +20,7 @@
 #define kDatePickerHeight 150.f
 #define kDeliveryTimePickerHeight kDatePickerHeight
 #define NOT(__x__) !(__x__)
-#define kDateFormat @"dd.MM.YYYY"
+#define kDateFormat @"dd/MM/yyyy"
 
 // Table items enums
 typedef enum : NSUInteger {
@@ -28,8 +28,8 @@ typedef enum : NSUInteger {
     SECTION_ADDRESS,
     SECTION_SCHEDULE,
     SECTION_CONTENT,
-    SECTION_COMMENTS,
     SECTION_CONFIRM,
+    SECTION_COMMENTS,
     SECTION_COUNTER
 } Sections;
 
@@ -109,8 +109,8 @@ typedef enum : NSUInteger {
     
     [self initFields];
     _order = [[OrderModel alloc] init];
-    [[self navigationItem] setTitle:LOC(@"Clear Water")];
-    [[self navigationItem] setRightBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:LOC(@"Restore") style:UIBarButtonItemStylePlain target:self action:@selector(restoreOrderTapped:)]];
+    [[self navigationItem] setTitle:LOC(@"title.MainScreen")];
+    [[self navigationItem] setRightBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:LOC(@"button.RestoreOrder") style:UIBarButtonItemStylePlain target:self action:@selector(restoreOrderTapped:)]];
 
     // handle keyboard appearance to change UI layout
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -285,6 +285,8 @@ typedef enum : NSUInteger {
         return;
     }
     
+    [self hidePickers];
+    
     DEBUG_START
     //  Delete after tests. Only successfuly sent Order is tended to be stored
     [self storeOrder:_order];
@@ -382,9 +384,26 @@ typedef enum : NSUInteger {
         isOK = NO;
         [self showError:LOC(@"error.NotAllFieldsFilled")];
     }
-    if( [[_scheduleDate text] length] == 0 ) {
+    if( [[_scheduleDate text] length] == 0 )
+    {
         isOK = NO;
         [self showError:LOC(@"error.NotAllFieldsFilled")];
+    }
+    else
+    {
+        NSDateFormatter *form = [[NSDateFormatter alloc] init];
+        [form setDateFormat:kDateFormat];
+        NSDate *date = [form dateFromString:[_scheduleDate text]];
+        NSCalendar *calendar = [NSCalendar currentCalendar];
+        NSDateComponents *dcomp = [calendar components:NSCalendarUnitWeekday fromDate:date];
+#define WEEKDAY_SATURDAY 7
+#define WEEKDAY_SUNDAY 1
+
+        if( [dcomp weekday] == WEEKDAY_SUNDAY )
+        {
+            isOK = NO;
+            [self showError:LOC(@"error.DeliveryProhibitedInSunday")];
+        }
     }
     if( [[_scheduleTime text] length] == 0 ) {
         isOK = NO;
@@ -479,27 +498,27 @@ typedef enum : NSUInteger {
     
     switch (section) {
         case SECTION_CLIENT:
-            header = @"table.section.Client";
+            header = LOC(@"table.section.Client");
             break;
             
         case SECTION_ADDRESS:
-            header = @"table.section.Address";
+            header = LOC(@"table.section.Address");
             break;
             
         case SECTION_CONTENT:
-            header = @"table.section.Content";
+            header = LOC(@"table.section.Content");
             break;
             
         case SECTION_SCHEDULE:
-            header = @"table.section.Schedule";
+            header = LOC(@"table.section.Schedule");
             break;
             
         case SECTION_COMMENTS:
-            header = @"table.section.Comments";
+            header = LOC(@"table.section.Comments");
             break;
             
         case SECTION_CONFIRM:
-            header = @"table.section.Confirm";
+            header = LOC(@"table.section.Confirm");
             break;
             
         default:
@@ -521,8 +540,9 @@ typedef enum : NSUInteger {
     {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellID];
         [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+        [[cell contentView] setNewHeight:kDefaultCellHeight];
         UIView *separator = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth([cell bounds]), 1.f)];
-        [separator setBackgroundColor:[UIColor redColor]];
+        [separator setBackgroundColor:[UIColor lightGrayColor]];
         [[cell contentView] addSubview:separator];
         
         switch (indexPath.section)
@@ -534,6 +554,7 @@ typedef enum : NSUInteger {
                 [field changeSizeWidthDelta:BORDER_DEFAULT heightDelta:BORDER_DEFAULT];
                 [field changeFrameXDelta:SHIFT_DEFAULT yDelta:SHIFT_DEFAULT];
                 [[cell contentView] addSubview:field];
+                [field alignVerticalsWithMasterView:[field superview]];
                 break;
             }
             case SECTION_ADDRESS:
@@ -548,6 +569,7 @@ typedef enum : NSUInteger {
                 [field changeSizeWidthDelta:BORDER_DEFAULT heightDelta:BORDER_DEFAULT];
                 [field changeFrameXDelta:SHIFT_DEFAULT yDelta:SHIFT_DEFAULT];
                 [[cell contentView] addSubview:field];
+                [field alignVerticalsWithMasterView:[field superview]];
                 break;
             }
                 
@@ -608,6 +630,7 @@ typedef enum : NSUInteger {
                         [field changeSizeWidthDelta:BORDER_DEFAULT heightDelta:BORDER_DEFAULT];
                         [field changeFrameXDelta:SHIFT_DEFAULT yDelta:SHIFT_DEFAULT];
                         [[cell contentView] addSubview:field];
+                        [field alignVerticalsWithMasterView:[field superview]];
 
                         // date cell should be selectable to change table UI and display date picker
                         if( _scheduleDate == field ) {
@@ -623,7 +646,6 @@ typedef enum : NSUInteger {
                         [_pickerScheduleDate setNewHeight:kDatePickerHeight];
                         [[cell contentView] setFrame:[_pickerScheduleDate frame]];
                         [[cell contentView] addSubview:_pickerScheduleDate];
-                        [separator alignBottomsWithMasterView:[separator superview]];
                         [separator setHidden:YES];
                         break;
                     }
@@ -634,7 +656,6 @@ typedef enum : NSUInteger {
                         [_pickerScheduleTime setNewHeight:kDeliveryTimePickerHeight];
                         [[cell contentView] setFrame:[_pickerScheduleTime frame]];
                         [[cell contentView] addSubview:_pickerScheduleTime];
-                        [separator alignBottomsWithMasterView:[separator superview]];
                         [separator setHidden:YES];
                         break;
                     }
@@ -651,6 +672,7 @@ typedef enum : NSUInteger {
                 [field changeSizeWidthDelta:BORDER_DEFAULT heightDelta:BORDER_DEFAULT];
                 [field changeFrameXDelta:SHIFT_DEFAULT yDelta:SHIFT_DEFAULT];
                 [[cell contentView] addSubview:field];
+                [field alignVerticalsWithMasterView:[field superview]];
                 break;
             }
             case SECTION_CONFIRM:
@@ -662,6 +684,7 @@ typedef enum : NSUInteger {
                 [field changeSizeWidthDelta:BORDER_DEFAULT heightDelta:BORDER_DEFAULT];
                 [field changeFrameXDelta:SHIFT_DEFAULT yDelta:SHIFT_DEFAULT];
                 [[cell contentView] addSubview:field];
+                [field alignVerticalsWithMasterView:[field superview]];
                 break;
             }
             default:
@@ -703,7 +726,6 @@ typedef enum : NSUInteger {
                     {
                         NSDateFormatter *form = [[NSDateFormatter alloc] init];
                         [form setDateFormat:kDateFormat];
-                        [form setDateStyle:NSDateFormatterNoStyle];
                         NSDate *date = [form dateFromString:[_scheduleDate text]];
                         
                         if( date ) {

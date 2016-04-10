@@ -1,0 +1,37 @@
+/* 
+  Localized.strings
+  ClearWater
+
+  Created by Rett Pop on 2016-04-11.
+  Copyright © 2016 SapiSoft. All rights reserved.
+*/
+"title.MainScreen" = "Clear Water";
+"button.RestoreOrder" = "Refill";
+"placeholder.ClientCode" = "Client code";
+"placeholder.AddressCity" = "City";
+"placeholder.AddressStreet" = "Street(*)";
+"placeholder.addressHouse" = "House(*)";
+"placeholder.addressApt" = "Apartments(*)";
+"placeholder.addressContactName" = "Contact name(*)";
+"placeholder.addressContactPhone" = "Contact phone(*)";
+"placeholder.scheduleTime" = "Delivery period";
+"placeholder.scheduleDate" = "Delivery date";
+"placeholder.confirmSMS" = "Confirm by SMS";
+"placeholder.confirmPhone" = "Confirm by Phone";
+"placeholder.confirmEmail" = "Confirm by email";
+"placeholder.orderComments" = "Comments";
+"error.NotAllFieldsFilled" = "Not all mandatory field were filled";
+"error.NotEnoughItemsOrdered" = "At least 2 bottles should be ordered";
+"error.DeliveryProhibitedInSunday" = "Delivery is not perfomed in Sunday";
+"cellText.ClearWater" = "Clear water";
+"cellText.FluoridedWater" = "Fluorided";
+"cellText.IodinatedWater" = "Iodinated";
+"title.Error" = "Error";
+"button.OK" = "OK";
+
+"table.section.Client" = "Client";
+"table.section.Address" = "Address";
+"table.section.Content" = "Bottles";
+"table.section.Schedule" = "Delivery schedule";
+"table.section.Comments" = "Comments";
+"table.section.Confirm" = "Order confirmation";

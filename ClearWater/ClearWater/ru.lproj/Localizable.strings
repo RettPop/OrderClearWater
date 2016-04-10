@@ -1,0 +1,38 @@
+/* 
+  Localized.strings
+  ClearWater
+
+  Created by Rett Pop on 2016-04-11.
+  Copyright © 2016 SapiSoft. All rights reserved.
+*/
+"title.MainScreen" = "Clear Water";
+"button.RestoreOrder" = "Вспомнить";
+"placeholder.ClientCode" = "Код клиента";
+"placeholder.AddressCity" = "Город";
+"placeholder.AddressStreet" = "Улица(*)";
+"placeholder.addressHouse" = "Дом(*)";
+"placeholder.addressApt" = "Квартира(*)";
+"placeholder.addressContactName" = "Контактное лицо(*)";
+"placeholder.addressContactPhone" = "Контактный телефон(*)";
+"placeholder.scheduleTime" = "Период доставки";
+"placeholder.scheduleDate" = "Дата доставки";
+"placeholder.confirmSMS" = "Подтвердить по SMS";
+"placeholder.confirmPhone" = "Подтвердить по телефону";
+"placeholder.confirmEmail" = "Подтвердить по email";
+"placeholder.orderComments" = "Комментарий";
+"error.NotAllFieldsFilled" = "Не все обязательные поля заполнены";
+"error.NotEnoughItemsOrdered" = "В заказе должно быть как минимум 2 бутыли воды";
+"error.DeliveryProhibitedInSunday" = "Доставка не работает в воскресенье";
+"cellText.ClearWater" = "Чистая вода";
+"cellText.FluoridedWater" = "Фторированная";
+"cellText.IodinatedWater" = "Йодированная";
+"title.Error" = "Ошибка";
+"button.OK" = "OK";
+
+"table.section.Client" = "Клиент";
+"table.section.Address" = "Адрес";
+"table.section.Content" = "Бутыли";
+"table.section.Schedule" = "Расписание доставки";
+"table.section.Comments" = "Комментарий";
+"table.section.Confirm" = "Подтверждение заказа";
+
