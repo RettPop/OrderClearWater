@@ -74,7 +74,7 @@
 -(void)alignBottomsWithMasterView:(UIView*)master
 {
     //    CGPoint newXY = CGPointMake(CGRectGetMinX(master.frame), master.frame.origin.y + master.frame.size.height - CGRectGetHeight(self.frame) - 50 );
-    CGPoint newXY = CGPointMake(CGRectGetMinX(master.frame),
+    CGPoint newXY = CGPointMake(CGRectGetMinX(self.frame),
                                 master.frame.size.height - master.frame.origin.y - CGRectGetHeight(self.frame));
     [self setFrameX:newXY.x andY:newXY.y];
 }

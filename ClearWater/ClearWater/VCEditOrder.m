@@ -250,7 +250,8 @@ typedef enum : NSUInteger {
 -(UITextField *)newFieldWithPlaceholder:(NSString *) placeholder andKeyboard:(UIKeyboardType)keyboardType
 {
     UITextField *newField = [[UITextField alloc] init];
-    [newField setBorderStyle:UITextBorderStyleRoundedRect];
+//    [newField setBorderStyle:UITextBorderStyleRoundedRect];
+    [newField setBorderStyle:UITextBorderStyleNone];
     [newField setKeyboardType:keyboardType];
     [newField setReturnKeyType:UIReturnKeyDone];
     [newField setDelegate:self];
@@ -545,7 +546,7 @@ ASYNC_BLOCK_END
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSString *cellID = CompCellID(indexPath.section, indexPath.row);
+    NSString *cellID = CompCellID(indexPath.section, (long)indexPath.row);
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID];
 #define BORDER_DEFAULT -20.f
 #define SHIFT_DEFAULT 10.f
@@ -556,9 +557,15 @@ ASYNC_BLOCK_END
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellID];
         [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
         [[cell contentView] setNewHeight:kDefaultCellHeight];
+        [cell setNewWidth:CGRectGetWidth([tableView bounds])];
+        [[cell contentView] setNewWidth:CGRectGetWidth([tableView bounds])];
+        
+        // create separator
         UIView *separator = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth([cell bounds]), 1.f)];
         [separator setBackgroundColor:[UIColor lightGrayColor]];
+        [separator changeSizeWidthDelta:-SHIFT_DEFAULT*2 heightDelta:.0f];
         [[cell contentView] addSubview:separator];
+        [separator alignVerticalsWithMasterView:[cell contentView]];
         
         switch (indexPath.section)
         {
@@ -570,6 +577,9 @@ ASYNC_BLOCK_END
                 [field changeFrameXDelta:SHIFT_DEFAULT yDelta:SHIFT_DEFAULT];
                 [[cell contentView] addSubview:field];
                 [field alignVerticalsWithMasterView:[field superview]];
+                [field alignHorizontalsWithMasterView:[field superview]];
+                [[field superview] addDebugBorder];
+                DLog(@"%@", field);
                 break;
             }
             case SECTION_ADDRESS:
@@ -706,7 +716,6 @@ ASYNC_BLOCK_END
                 break;
         }
         [separator alignBottomsWithMasterView:[separator superview]];
-        
     }
     
     return  cell;
@@ -866,7 +875,8 @@ ASYNC_BLOCK_END
     _isKBVisible = NO;
     // will shift view DOWN on keyboard disappear
     [UIView animateWithDuration:.2f animations:^{
-        [[self view] changeFrameXDelta:.0f yDelta:_viewShiftDelta];
+        //[[self view] changeFrameXDelta:.0f yDelta:_viewShiftDelta];
+        [[self view] changeSizeWidthDelta:.0f heightDelta:_viewShiftDelta];
         _viewShiftDelta = .0f;
     } completion:^(BOOL finished) {
     }];
@@ -881,7 +891,8 @@ ASYNC_BLOCK_END
     // if keyboard is higher than Login button bottom line shift UI to this delta
     if( _viewShiftDelta > 0 ) {
         [UIView animateWithDuration:.2f animations:^{
-            [[self view] changeFrameXDelta:.0f yDelta:-_viewShiftDelta];
+            //[[self view] changeFrameXDelta:.0f yDelta:-_viewShiftDelta];
+            [[self view] changeSizeWidthDelta:.0f heightDelta:-_viewShiftDelta];
         } completion:^(BOOL finished) {
             if(finished){
                 _isKBVisible = YES;
