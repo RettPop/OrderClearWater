@@ -14,7 +14,7 @@
 #import "CWSchedule.h"
 
 #define kTableGeneralCellID @"kTableGeneralCellID"
-#define CompCellID(x,y) [NSString stringWithFormat:@"SECTION %li ITEM %li", x, y]
+#define CompCellID(x,y) [NSString stringWithFormat:@"SECTION %li ITEM %li", (long)x, (long)y]
 #define kDefaultCellHeight 60.f
 #define kUserDefsKeyLastOrder @"LastOrder"
 #define kDatePickerHeight 150.f
@@ -362,7 +362,7 @@ ASYNC_BLOCK_END
     [_addressStreet setText: [order addressStreet]];
     [_addressHouse setText: [order addressHouse]];
     [_addressApt setText: [order addressApt]];
-    [_addressContactName setText: [order addressContactPhone]];
+    [_addressContactName setText: [order addressContactName]];
     [_addressContactPhone setText: [order addressContactPhone]];
     [_scheduleTime setText: [order scheduleTime]];
     [_scheduleDate setText: [order scheduleDate]];
@@ -546,7 +546,7 @@ ASYNC_BLOCK_END
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSString *cellID = CompCellID(indexPath.section, (long)indexPath.row);
+    NSString *cellID = CompCellID(indexPath.section, indexPath.row);
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID];
 #define BORDER_DEFAULT -20.f
 #define SHIFT_DEFAULT 10.f
@@ -566,6 +566,7 @@ ASYNC_BLOCK_END
         [separator changeSizeWidthDelta:-SHIFT_DEFAULT*2 heightDelta:.0f];
         [[cell contentView] addSubview:separator];
         [separator alignVerticalsWithMasterView:[cell contentView]];
+        [[cell detailTextLabel] setFont:[UIFont systemFontOfSize:13.f]];
         
         switch (indexPath.section)
         {
@@ -578,7 +579,7 @@ ASYNC_BLOCK_END
                 [[cell contentView] addSubview:field];
                 [field alignVerticalsWithMasterView:[field superview]];
                 [field alignHorizontalsWithMasterView:[field superview]];
-                [[field superview] addDebugBorder];
+                [[cell detailTextLabel] setText:[field placeholder]];
                 DLog(@"%@", field);
                 break;
             }
@@ -595,6 +596,8 @@ ASYNC_BLOCK_END
                 [field changeFrameXDelta:SHIFT_DEFAULT yDelta:SHIFT_DEFAULT];
                 [[cell contentView] addSubview:field];
                 [field alignVerticalsWithMasterView:[field superview]];
+                [[cell detailTextLabel] setText:[field placeholder]];
+
                 break;
             }
                 
@@ -656,6 +659,7 @@ ASYNC_BLOCK_END
                         [field changeFrameXDelta:SHIFT_DEFAULT yDelta:SHIFT_DEFAULT];
                         [[cell contentView] addSubview:field];
                         [field alignVerticalsWithMasterView:[field superview]];
+                        [[cell detailTextLabel] setText:[field placeholder]];
 
                         // date cell should be selectable to change table UI and display date picker
                         if( _scheduleDate == field ) {
@@ -698,6 +702,8 @@ ASYNC_BLOCK_END
                 [field changeFrameXDelta:SHIFT_DEFAULT yDelta:SHIFT_DEFAULT];
                 [[cell contentView] addSubview:field];
                 [field alignVerticalsWithMasterView:[field superview]];
+                [[cell detailTextLabel] setText:[field placeholder]];
+
                 break;
             }
             case SECTION_CONFIRM:
@@ -710,6 +716,8 @@ ASYNC_BLOCK_END
                 [field changeFrameXDelta:SHIFT_DEFAULT yDelta:SHIFT_DEFAULT];
                 [[cell contentView] addSubview:field];
                 [field alignVerticalsWithMasterView:[field superview]];
+                [[cell detailTextLabel] setText:[field placeholder]];
+
                 break;
             }
             default:
