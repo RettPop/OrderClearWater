@@ -19,8 +19,6 @@
 #define kUserDefsKeyLastOrder @"LastOrder"
 #define kDatePickerHeight 150.f
 #define kDeliveryTimePickerHeight kDatePickerHeight
-#define NOT(__x__) !(__x__)
-#define kDateFormat @"dd/MM/yyyy"
 
 // Table items enums
 typedef enum : NSUInteger {
@@ -73,6 +71,7 @@ typedef enum : NSUInteger {
     UIActivityIndicatorView *_activity;
     UIView *_activityBG;
     UILabel *_activityText;
+    NSDateFormatter *_dateFormatter;
 }
 -(IBAction)sendOrderTapped:(id)sender;
 
@@ -100,7 +99,7 @@ typedef enum : NSUInteger {
 @property (strong, nonatomic) UIStepper *stepperFluoride;
 @property (strong, nonatomic) UIStepper *stepperIodinate;
 
-@property (strong, nonatomic) UIDatePicker *pickerScheduleDate;
+@property (strong, nonatomic) UIPickerView *pickerScheduleDate;
 @property (strong, nonatomic) UIPickerView *pickerScheduleTime;
 
 
@@ -111,6 +110,8 @@ typedef enum : NSUInteger {
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    _dateFormatter = [[NSDateFormatter alloc] init]; // Apple recommends to avoid frequent formatter creating. So, cache it https://developer.apple.com/library/ios/documentation/Cocoa/Conceptual/DataFormatting/Articles/dfDateFormatting10_4.html#//apple_ref/doc/uid/TP40002369-SW5
     
     [self initFields];
     _order = [[OrderModel alloc] init];
@@ -175,11 +176,13 @@ typedef enum : NSUInteger {
     _contentIodinated = [self newLabel];
     
     // date picker setting up
-    _pickerScheduleDate = [[UIDatePicker alloc] initWithFrame:CGRectMake(0, 0, 375, kDatePickerHeight)];
-    [_pickerScheduleDate setDatePickerMode:UIDatePickerModeDate];
-    [_pickerScheduleDate setMinimumDate:[NSDate dateWithTimeIntervalSinceNow:(60*60*24)]]; // minimal date is tomorrow
-    [_pickerScheduleDate addTarget:self action:@selector(dateSelected:) forControlEvents:UIControlEventValueChanged];
+    _deliveryDates = [CWSchedule deliveryDates];
+    _pickerScheduleDate = [[UIPickerView alloc] initWithFrame:CGRectMake(0, 0, 375, kDeliveryTimePickerHeight)];
+    [_pickerScheduleDate setDelegate:self];
+    [_pickerScheduleDate setDataSource:self];
+    [_pickerScheduleDate selectRow:0 inComponent:0 animated:NO];
     [_pickerScheduleDate setHidden:YES];
+    [_pickerScheduleDate addDebugBorder];
 
     // delivery time periods picker setting
     _pickerScheduleTime = [[UIPickerView alloc] initWithFrame:CGRectMake(0, 0, 375, kDeliveryTimePickerHeight)];
@@ -188,22 +191,7 @@ typedef enum : NSUInteger {
     [_pickerScheduleTime selectRow:0 inComponent:0 animated:NO];
     [_pickerScheduleTime setHidden:YES];
     _deliveryTimes = [CWSchedule deliveryPeriods];
-    
-    // delivery dates picker setting
-    _deliveryDates = [CWSchedule deliveryDates];
-}
-
--(void)dateSelected:(id)sender
-{
-    UIDatePicker *picker = (UIDatePicker *)sender;
-    if( picker == _pickerScheduleDate )
-    {
-        NSDateFormatter *form = [[NSDateFormatter alloc] init];
-        [form setDateFormat:kDateFormat];
-        NSSTring *dateStr = [form stringFromDate:[picker date]];
-        [_scheduleDate setText:dateStr];
-        [_order setScheduleDate:dateStr];
-    }
+    [_pickerScheduleTime addDebugBorder];
 }
 
 -(void)deliveryTimeSelected:(id)sender
@@ -296,10 +284,10 @@ typedef enum : NSUInteger {
     
     [self hidePickers];
     
-//    DEBUG_START
-//    //  Delete after tests. Only successfuly sent Order is tended to be stored
-//    [self storeOrder:_order];
-//    DEBUG_END
+    DEBUG_START
+    //  Delete after tests. Only successfuly sent Order is tended to be stored
+    [self storeOrder:_order];
+    DEBUG_END
     [self fillOrderFromUI];
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:LOC(@"message.title.SendOrder?")
                                                                    message:LOC(@"message.text.SendOrder?")
@@ -314,7 +302,7 @@ typedef enum : NSUInteger {
 -(void)processNewOrder:(OrderModel *)order
 {
     [self showActivity];
-    ASYNC_BLOCK_START
+//    ASYNC_BLOCK_START
     BOOL isSent = [[ServerHandler sharedInstance] sendOrder:order];
     
     SYNC_BLOCK_START
@@ -327,7 +315,7 @@ typedef enum : NSUInteger {
     }
     [self hideActivity];
     SYNC_BLOCK_END
-    ASYNC_BLOCK_END
+//    ASYNC_BLOCK_END
 }
 
 -(void)storeOrder:(OrderModel *)order
@@ -358,11 +346,12 @@ typedef enum : NSUInteger {
     [_order setAddressApt:[_addressApt text]];
     [_order setAddressContactPhone:[_addressContactPhone text]];
     [_order setAddressContactName:[_addressContactName text]];
-    [_order setScheduleTime:[_scheduleTime text]];
-    [_order setScheduleDate:[_scheduleDate text]];
-    //    [_order setContentClearWater;
-    //    [_order setContentFluorided;
-    //    [_order setContentIodinated;
+//     these fields are filled on changing
+//    [_order setScheduleTime:[_scheduleTime text]];
+//    [_order setScheduleDate:[_scheduleDate text]];
+//    [_order setContentClearWater;
+//    [_order setContentFluorided;
+//    [_order setContentIodinated;
     [_order setConfirmSMS:[_confirmSMS text]];
     [_order setConfirmPhone:[_confirmPhone text]];
     [_order setConfirmEmail:[_confirmEmail text]];
@@ -380,7 +369,7 @@ typedef enum : NSUInteger {
     [_addressContactName setText: [order addressContactName]];
     [_addressContactPhone setText: [order addressContactPhone]];
     [_scheduleTime setText: [order scheduleTime]];
-    [_scheduleDate setText: [order scheduleDate]];
+    [_scheduleDate setText: [order scheduleDateStr]];
     [_confirmSMS setText: [order confirmSMS]];
     [_confirmPhone setText: [order confirmPhone]];
     [_confirmEmail setText: [order confirmEmail]];
@@ -422,9 +411,8 @@ typedef enum : NSUInteger {
     }
     else
     {
-        NSDateFormatter *form = [[NSDateFormatter alloc] init];
-        [form setDateFormat:kDateFormat];
-        NSDate *date = [form dateFromString:[_scheduleDate text]];
+        [_dateFormatter setDateFormat:kDateFormat];
+        NSDate *date = [_dateFormatter dateFromString:[_scheduleDate text]];
         NSCalendar *calendar = [NSCalendar currentCalendar];
         NSDateComponents *dcomp = [calendar components:NSCalendarUnitWeekday fromDate:date];
 #define WEEKDAY_SATURDAY 7
@@ -661,7 +649,8 @@ typedef enum : NSUInteger {
             }
             case SECTION_SCHEDULE:
             {
-                switch (indexPath.row) {
+                switch (indexPath.row)
+                {
                     case ITEM_SCHEDULE_DATE:
                     case ITEM_SCHEDULE_TIME:
                     {
@@ -769,14 +758,14 @@ typedef enum : NSUInteger {
                         ofTableView:tableView];
 
                     // if corresponding text field already contains date, try to slect it in the picker
-                    if( ([[_scheduleDate text] length] > 0) && NOT([_pickerScheduleDate isHidden]) )
+                    if( ([_order scheduleDate]) && NOT([_pickerScheduleDate isHidden]) )
                     {
-                        NSDateFormatter *form = [[NSDateFormatter alloc] init];
-                        [form setDateFormat:kDateFormat];
-                        NSDate *date = [form dateFromString:[_scheduleDate text]];
-                        
-                        if( date ) {
-                            [_pickerScheduleDate setDate:date];
+                        for (NSDate *oneDate in _deliveryDates)
+                        {
+                            if( [oneDate isEqualToDate:[_order scheduleDate]] )
+                            {
+                                [_pickerScheduleDate selectRow:[_deliveryDates indexOfObject:oneDate] inComponent:0 animated:NO];
+                            }
                         }
                     }
 
@@ -955,17 +944,40 @@ typedef enum : NSUInteger {
 
 -(NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
 {
-    return [_deliveryTimes count];
+    NSArray *targetSrc = ( pickerView == _pickerScheduleDate ) ? _deliveryDates : _deliveryTimes;
+    return [targetSrc count];
 }
 
 -(NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
 {
-    return [_deliveryTimes objectAtIndex:row];
+    NSString *title = @"";
+    
+    if( pickerView == _pickerScheduleDate )
+    {
+        [_dateFormatter setDateFormat:kDateFormatWithDay];
+        title = [_dateFormatter stringFromDate:[_deliveryDates objectAtIndex:row]];
+    }
+    else
+    {
+        title = [_deliveryTimes objectAtIndex:row];
+    }
+    
+    return title;
 }
 
 -(void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
 {
-    [_scheduleTime setText:[_deliveryTimes objectAtIndex:row]];
+    if( pickerView == _pickerScheduleDate )
+    {
+        [_dateFormatter setDateFormat:kDateFormat];
+        [_scheduleDate setText:[_dateFormatter stringFromDate:[_deliveryDates objectAtIndex:row]]];
+        [_order setScheduleDate:[_deliveryDates objectAtIndex:row]];
+    }
+    else
+    {
+        [_scheduleTime setText:[_deliveryTimes objectAtIndex:row]];
+        [_order setScheduleTime:[_deliveryTimes objectAtIndex:row]];
+    }
 }
 
 #pragma mark -

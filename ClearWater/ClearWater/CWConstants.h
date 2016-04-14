@@ -54,5 +54,9 @@
 #define decPoint(__name__)	__name__ = [aDecoder decodeCGPointForKey:@#__name__];
 #define decSize(__name__)	__name__ = [aDecoder decodeCGSizeForKey:@#__name__];
 
+#define NOT(__x__) !(__x__)
+#define kDateFormat @"dd/MM/yyyy"
+#define kDateFormatWithDay @"EEEE dd/MM/yyyy"
+
 
 #endif /* CWConstants_h */

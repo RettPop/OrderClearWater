@@ -38,18 +38,28 @@
 #define WEEKDAY_SUNDAY 1
     
     NSMutableArray *days = [NSMutableArray arrayWithCapacity:DAYS_AMOUNT];
-    NSDate *date = [[NSDate date] dateByAddingTimeInterval:SEC_IN_DAY]; // beginning from tomorrow
+    NSDate *date = [NSDate date]; // beginning from tomorrow
     NSCalendar *calendar = [NSCalendar currentCalendar];
-    NSInteger cntDays = DAYS_AMOUNT;
-    while (cntDays > DAYS_AMOUNT)
+    [calendar setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
+    
+    // removing time
+    NSDateComponents *comps = [calendar components:(NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:date];
+    [comps setHour:0];
+    [comps setMinute:0];
+    [comps setSecond:0];
+    date = [calendar dateFromComponents:comps];
+
+    // running forward through the days and add them to array
+    NSInteger cntDays = 0;
+    while (cntDays < DAYS_AMOUNT)
     {
+        date = [date dateByAddingTimeInterval:SEC_IN_DAY];
         NSDateComponents *dcomp = [calendar components:NSCalendarUnitWeekday fromDate:date];
         if( WEEKDAY_SUNDAY == [dcomp weekday] ) {
             continue;
         }
         
         [days addObject:date];
-        date = [date dateByAddingTimeInterval:SEC_IN_DAY];
         cntDays++;
     }
 

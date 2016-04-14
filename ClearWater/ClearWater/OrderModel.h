@@ -17,6 +17,7 @@
 -(void)orderFluoridedWater:(NSUInteger)amount;
 -(void)orderIonidedWater:(NSUInteger)amount;
 -(NSDictionary *)valuesDict;
+-(NSString *)scheduleDateStr;
 
 @property (strong, nonatomic) NSString *clientCode;
 @property (strong, nonatomic) NSString *addressCity;
@@ -26,7 +27,7 @@
 @property (strong, nonatomic) NSString *addressContactPhone;
 @property (strong, nonatomic) NSString *addressContactName;
 @property (strong, nonatomic) NSString *scheduleTime;
-@property (strong, nonatomic) NSString *scheduleDate;
+@property (strong, nonatomic) NSDate   *scheduleDate;
 @property (strong, nonatomic) NSNumber *contentClearWater;
 @property (strong, nonatomic) NSNumber *contentFluorided;
 @property (strong, nonatomic) NSNumber *contentIodinated;

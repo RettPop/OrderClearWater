@@ -70,7 +70,7 @@
         _addressContactPhone = @"";
         _addressContactName = @"";
         _scheduleTime = @"";
-        _scheduleDate = @"";
+        _scheduleDate = nil;
         _contentClearWater = @0;
         _contentFluorided = @0;
         _contentIodinated = @0;
@@ -120,7 +120,7 @@
                              @"oroffice" : [self addressApt],
                              @"orname" : [self addressContactName],
                              @"ortel" : [self addressContactPhone],
-                             @"ordate" : [self scheduleDate],
+                             @"ordate" : [self scheduleDateStr],
                              @"ortime" : [self scheduleTime],
                              @"orcw" : [self contentClearWater],
                              @"orcwf" : [self contentFluorided],
@@ -130,6 +130,13 @@
                              @"orconftel" : [self confirmPhone],
                              @"orcomm" : [self orderComments]};
     return params;
+}
+
+-(NSString *)scheduleDateStr
+{
+    NSDateFormatter *form = [[NSDateFormatter alloc] init];
+    [form setDateFormat:kDateFormat];
+    return [form stringFromDate:_scheduleDate];
 }
 
 @end
