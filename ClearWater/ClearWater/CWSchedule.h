@@ -10,4 +10,5 @@
 
 @interface CWSchedule : NSObject
 +(NSArray *)deliveryPeriods;
++(NSArray *)deliveryDates;
 @end

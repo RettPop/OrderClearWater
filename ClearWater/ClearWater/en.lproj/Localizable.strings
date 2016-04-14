@@ -28,6 +28,9 @@
 "cellText.IodinatedWater" = "Iodinated";
 "title.Error" = "Error";
 "button.OK" = "OK";
+"button.NO" = "NO";
+"button.YES" = "YES";
+"button.Send" = "Send";
 
 "table.section.Client" = "Client";
 "table.section.Address" = "Address";
@@ -38,3 +41,5 @@
 "message.OrderWasSent" = "Order was successfuly sent";
 "title.Success" = "Success";
 "message.ErrorSendingOrder" = "Error sending order. Try again later.";
+"message.text.SendOrder?" = "Continue with order send?";
+"message.title.SendOrder?" = "Send order";

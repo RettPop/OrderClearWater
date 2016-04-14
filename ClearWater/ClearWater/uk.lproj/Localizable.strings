@@ -28,6 +28,9 @@
 "cellText.IodinatedWater" = "Йодована";
 "title.Error" = "Помилка";
 "button.OK" = "OK";
+"button.NO" = "НI";
+"button.YES" = "ТАК";
+"button.Send" = "Вiдправка";
 
 "table.section.Client" = "Клиент";
 "table.section.Address" = "Адреса";
@@ -39,3 +42,6 @@
 "message.OrderWasSent" = "Замова була вдало вiдправлено.";
 "title.Success" = "Радiсть";
 "message.ErrorSendingOrder" = "Помилка вiдправки замови. Спробуйте ще раз.";
+
+"message.text.SendOrder?" = "Вiдправити замовлення?";
+"message.title.SendOrder?" = "Вiдправка";

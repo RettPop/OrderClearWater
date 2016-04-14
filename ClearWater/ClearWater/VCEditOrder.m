@@ -68,6 +68,7 @@ typedef enum : NSUInteger {
     CGFloat _viewShiftDelta;
     OrderModel *_order;
     NSArray *_deliveryTimes;
+    NSArray *_deliveryDates;
 
     UIActivityIndicatorView *_activity;
     UIView *_activityBG;
@@ -187,6 +188,9 @@ typedef enum : NSUInteger {
     [_pickerScheduleTime selectRow:0 inComponent:0 animated:NO];
     [_pickerScheduleTime setHidden:YES];
     _deliveryTimes = [CWSchedule deliveryPeriods];
+    
+    // delivery dates picker setting
+    _deliveryDates = [CWSchedule deliveryDates];
 }
 
 -(void)dateSelected:(id)sender
@@ -296,23 +300,34 @@ typedef enum : NSUInteger {
 //    //  Delete after tests. Only successfuly sent Order is tended to be stored
 //    [self storeOrder:_order];
 //    DEBUG_END
-
     [self fillOrderFromUI];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:LOC(@"message.title.SendOrder?")
+                                                                   message:LOC(@"message.text.SendOrder?")
+                                                            preferredStyle:UIAlertControllerStyleActionSheet];
+    [alert addAction:[UIAlertAction actionWithTitle:LOC(@"button.YES") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+        [self processNewOrder:_order];
+    }]];
+    [alert addAction:[UIAlertAction actionWithTitle:LOC(@"button.NO") style:UIAlertActionStyleCancel handler:nil]];
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
+-(void)processNewOrder:(OrderModel *)order
+{
     [self showActivity];
-ASYNC_BLOCK_START
-    BOOL isSent = [[ServerHandler sharedInstance] sendOrder:_order];
+    ASYNC_BLOCK_START
+    BOOL isSent = [[ServerHandler sharedInstance] sendOrder:order];
     
     SYNC_BLOCK_START
-        if( isSent ) {
-            [self storeOrder:_order];
-            [self showMessage:LOC(@"message.OrderWasSent") withTitle:LOC(@"title.Success")];
-        }
-        else {
-            [self showError:LOC(@"message.ErrorSendingOrder")];
-        }
-        [self hideActivity];
+    if( isSent ) {
+        [self storeOrder:order];
+        [self showMessage:LOC(@"message.OrderWasSent") withTitle:LOC(@"title.Success")];
+    }
+    else {
+        [self showError:LOC(@"message.ErrorSendingOrder")];
+    }
+    [self hideActivity];
     SYNC_BLOCK_END
-ASYNC_BLOCK_END
+    ASYNC_BLOCK_END
 }
 
 -(void)storeOrder:(OrderModel *)order
