@@ -52,8 +52,8 @@ typedef enum : NSUInteger {
 //    ITEM_CONTENT_ADDITIONAL,
     ITEM_CONTENT_COUNTER,
     ITEM_CONFIRM_SMS=0,
-    ITEM_CONFIRM_EMAIL,
     ITEM_CONFIRM_PHONE,
+    ITEM_CONFIRM_EMAIL,
     ITEM_CONFIRM_COUNTER,
     ITEM_COMMENTS=0,
     ITEM_COMMENTS_COUNTER
@@ -63,6 +63,7 @@ typedef enum : NSUInteger {
 @interface VCEditOrder ()
 {
     BOOL _isKBVisible;
+    BOOL _readonlyMode;
     CGFloat _viewShiftDelta;
     OrderModel *_order;
     NSArray *_deliveryTimes;
@@ -103,6 +104,8 @@ typedef enum : NSUInteger {
 @property (strong, nonatomic) UIPickerView *pickerScheduleDate;
 @property (strong, nonatomic) UIPickerView *pickerScheduleTime;
 
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *tableViewBottom;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *constrSendButtonHeight;
 
 @end
 
@@ -117,11 +120,27 @@ typedef enum : NSUInteger {
     
     [self initFields];
     _ordersManager = [OrdersManager new];
-    _order = [[OrderModel alloc] init];
-    [[self navigationItem] setTitle:LOC(@"title.MainScreen")];
     [_btnSendOrder setTitle:LOC(@"button.SendOrder") forState:UIControlStateNormal];
     
-    [[self navigationItem] setRightBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:LOC(@"button.RestoreOrder") style:UIBarButtonItemStylePlain target:self action:@selector(restoreOrderTapped:)]];
+    if( _readonlyMode )
+    {
+        [[self navigationItem] setTitle:LOC(@"title.Order")];
+        [self fillUIFromOrder:_order];
+        
+        // stretch table view to the bottom of screen
+        [_btnSendOrder setHidden:YES];
+        [_btnSendOrder changeFrameXDelta:.0f yDelta:CGRectGetHeight([_btnSendOrder bounds])];
+        [_tableViewBottom setPriority:UILayoutPriorityRequired];
+    }
+    else
+    {
+        [[self navigationItem] setTitle:LOC(@"title.NewOrder")];
+        _order = [[OrderModel alloc] init];
+        [_btnSendOrder setHidden:NO];
+        
+        [[self navigationItem] setRightBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:LOC(@"button.RestoreOrder") style:UIBarButtonItemStylePlain target:self action:@selector(restoreOrderTapped:)]];
+        [_tableViewBottom setPriority:UILayoutPriorityDefaultLow];
+    }
 
     // handle keyboard appearance to change UI layout
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -150,6 +169,12 @@ typedef enum : NSUInteger {
     else {
         [self showError:LOC(@"message.text.NoStoredOrders")];
     }
+}
+
+-(void)displayOrder:(OrderModel *)order
+{
+    _readonlyMode = YES;
+    _order = order;
 }
 
 -(void)initFields
@@ -237,7 +262,7 @@ typedef enum : NSUInteger {
     return [self newFieldWithPlaceholder:placeholder andKeyboard:UIKeyboardTypeDefault];
 }
 
--(UITextField *)newFieldWithPlaceholder:(NSString *) placeholder andKeyboard:(UIKeyboardType)keyboardType
+-(UITextField *)newFieldWithPlaceholder:(NSString *)placeholder andKeyboard:(UIKeyboardType)keyboardType
 {
     UITextField *newField = [[UITextField alloc] init];
     [newField setBorderStyle:UITextBorderStyleNone];
@@ -555,6 +580,9 @@ typedef enum : NSUInteger {
         [separator alignVerticalsWithMasterView:[cell contentView]];
         [[cell detailTextLabel] setFont:[UIFont systemFontOfSize:13.f]];
         
+        //if user can edit order
+        [cell setUserInteractionEnabled:NOT(_readonlyMode)];
+        
         switch (indexPath.section)
         {
             case SECTION_CLIENT:
@@ -566,7 +594,7 @@ typedef enum : NSUInteger {
                 [[cell contentView] addSubview:field];
                 [field alignVerticalsWithMasterView:[field superview]];
                 [field alignHorizontalsWithMasterView:[field superview]];
-                [[cell detailTextLabel] setText:[field placeholder]];
+                [[cell detailTextLabel] setText:LOC(@"cellText.Code")];
                 break;
             }
             case SECTION_ADDRESS:
@@ -583,6 +611,18 @@ typedef enum : NSUInteger {
                 [[cell contentView] addSubview:field];
                 [field alignVerticalsWithMasterView:[field superview]];
                 [[cell detailTextLabel] setText:[field placeholder]];
+                switch (indexPath.row)
+                {
+                    case ITEM_ADDRESS_CONTACTPHONE:
+                        [[cell detailTextLabel] setText:LOC(@"cellText.Phone")];
+                        break;
+                        
+                    case ITEM_ADDRESS_CONTACTNAME:
+                        [[cell detailTextLabel] setText:LOC(@"cellText.FullName")];
+                        break;
+                    default:
+                        break;
+                }
 
                 break;
             }
@@ -646,7 +686,13 @@ typedef enum : NSUInteger {
                         [field changeFrameXDelta:SHIFT_DEFAULT yDelta:SHIFT_DEFAULT];
                         [[cell contentView] addSubview:field];
                         [field alignVerticalsWithMasterView:[field superview]];
-                        [[cell detailTextLabel] setText:[field placeholder]];
+                        // set placeholder
+                        if( indexPath.row == ITEM_SCHEDULE_DATE ) {
+                            [[cell detailTextLabel] setText:LOC(@"cellText.Date")];
+                        }
+                        else if( indexPath.row == ITEM_SCHEDULE_TIME ) {
+                            [[cell detailTextLabel] setText:LOC(@"cellText.Period")];
+                        }
 
                         // date cell should be selectable to change table UI and display date picker
                         if( _scheduleDate == field ) {
@@ -681,23 +727,37 @@ typedef enum : NSUInteger {
                 
                 break;
             }
-            case SECTION_COMMENTS:
-            {
-                UITextField *field = [@[_orderComments] objectAtIndex:indexPath.row];
-                field.frame = [[cell contentView] frame];
-                [field changeSizeWidthDelta:BORDER_DEFAULT heightDelta:BORDER_DEFAULT];
-                [field changeFrameXDelta:SHIFT_DEFAULT yDelta:SHIFT_DEFAULT];
-                [[cell contentView] addSubview:field];
-                [field alignVerticalsWithMasterView:[field superview]];
-                [[cell detailTextLabel] setText:[field placeholder]];
-
-                break;
-            }
             case SECTION_CONFIRM:
             {
                 UITextField *field = [@[_confirmSMS,
                                         _confirmPhone,
                                         _confirmEmail] objectAtIndex:indexPath.row];
+                field.frame = [[cell contentView] frame];
+                [field changeSizeWidthDelta:BORDER_DEFAULT heightDelta:BORDER_DEFAULT];
+                [field changeFrameXDelta:SHIFT_DEFAULT yDelta:SHIFT_DEFAULT];
+                [[cell contentView] addSubview:field];
+                [field alignVerticalsWithMasterView:[field superview]];
+                // add placeholders
+                switch (indexPath.row)
+                {
+                    case ITEM_CONFIRM_SMS:
+                        [[cell detailTextLabel] setText:LOC(@"cellText.SMS")];
+                        break;
+                        
+                    case ITEM_CONFIRM_PHONE:
+                        [[cell detailTextLabel] setText:LOC(@"cellText.Phone")];
+                        break;
+                        
+                    case ITEM_CONFIRM_EMAIL:
+                        [[cell detailTextLabel] setText:LOC(@"cellText.Email")];
+                        break;
+                }
+                
+                break;
+            }
+            case SECTION_COMMENTS:
+            {
+                UITextField *field = [@[_orderComments] objectAtIndex:indexPath.row];
                 field.frame = [[cell contentView] frame];
                 [field changeSizeWidthDelta:BORDER_DEFAULT heightDelta:BORDER_DEFAULT];
                 [field changeFrameXDelta:SHIFT_DEFAULT yDelta:SHIFT_DEFAULT];

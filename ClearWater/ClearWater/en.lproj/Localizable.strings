@@ -17,15 +17,23 @@
 "placeholder.scheduleTime" = "Delivery period";
 "placeholder.scheduleDate" = "Delivery date";
 "placeholder.confirmSMS" = "Confirm by SMS";
-"placeholder.confirmPhone" = "Confirm by Phone";
+"placeholder.confirmPhone" = "Confirm by phone";
 "placeholder.confirmEmail" = "Confirm by email";
 "placeholder.orderComments" = "Comments";
 "error.NotAllFieldsFilled" = "Not all mandatory field were filled";
 "error.NotEnoughItemsOrdered" = "At least 2 bottles should be ordered";
 "error.DeliveryProhibitedInSunday" = "Delivery is not perfomed in Sunday";
-"cellText.ClearWater" = "Clear water";
-"cellText.FluoridedWater" = "Fluorided";
-"cellText.IodinatedWater" = "Iodinated";
+"cellText.ClearWater" = "Clear";
+"cellText.FluoridedWater" = "Fluorine";
+"cellText.IodinatedWater" = "Iodine";
+"cellText.SMS" = "SMS";
+"cellText.Phone" = "Phone";
+"cellText.Email" = "Email";
+"cellText.Code" = "Code";
+"cellText.FullName" = "Name";
+"cellText.Date" = "Date";
+"cellText.Period" = "Term";
+
 "title.Error" = "Error";
 "button.OK" = "OK";
 "button.NO" = "NO";
@@ -33,6 +41,20 @@
 "button.Send" = "Send";
 "button.AddNew" = "New";
 "button.SendOrder" = "Send order";
+"button.Delivered" = "Delivered";
+"button.Confirm" = "Deal";
+"button.Back" = "Back";
+"cellText.SMS" = "SMS";
+"cellText.Phone" = "Phone";
+"cellText.Email" = "Email";
+"cellText.Code" = "Code";
+"cellText.FullName" = "Name";
+"cellText.Date" = "Date";
+"cellText.Period" = "Period";
+"cellText.Clear" = "Clear";
+"cellText.Fluorine" = "Fluoride";
+"cellText.Iodine" = "Iodine";
+
 
 "table.section.Client" = "Client";
 "table.section.Address" = "Address";
@@ -46,3 +68,5 @@
 "message.text.SendOrder?" = "Continue with order send?";
 "message.title.SendOrder?" = "Send order";
 "message.text.NoStoredOrders" = "No previously sent orders found";
+"title.Order" = "Order";
+"title.NewOrder" = "New";

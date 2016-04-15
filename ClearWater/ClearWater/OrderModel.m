@@ -30,8 +30,8 @@
     encObj(_orderComments);
     encObj(_dateSent);
     encObj(_dateCreated);
+    encObj(_dateConfirmed);
     encBool(_delivered);
-    encBool(_confirmed);
 }
 
 - (nullable instancetype)initWithCoder:(NSCoder *)aDecoder
@@ -57,8 +57,8 @@
         decObj(_orderComments);
         decObj(_dateSent);
         decObj(_dateCreated);
+        decObj(_dateConfirmed);
         decBool(_delivered);
-        decBool(_confirmed);
     }
     
     return self;
@@ -88,6 +88,8 @@
         _orderComments = @"";
         _dateSent = nil;
         _dateCreated = [NSDate date];
+        _dateConfirmed = nil;
+        _delivered = NO;
     }
     
     return self;
@@ -106,7 +108,6 @@
         _addressContactPhone = [order addressContactPhone];
         _addressContactName =  [order addressContactName];
         _scheduleTime =  [order scheduleTime];
-        _scheduleDate = nil;
         _contentClearWater = @([order clearWater]);
         _contentFluorided = @([order fluoridedWater]);
         _contentIodinated = @([order iondinatedWater]);
@@ -114,7 +115,6 @@
         _confirmPhone = [order confirmPhone];
         _confirmEmail = [order confirmEmail];
         _orderComments = [order orderComments];
-        _dateSent = nil;
         _dateCreated = [NSDate date];
     }
     
@@ -183,5 +183,16 @@
         _dateSent = [NSDate date];
     }
 }
+
+-(void)markConfirmed
+{
+    _dateConfirmed = [NSDate date];
+}
+
+-(void)markDelivered
+{
+    _delivered = YES;
+}
+
 
 @end

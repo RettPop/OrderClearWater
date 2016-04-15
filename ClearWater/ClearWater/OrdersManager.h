@@ -15,5 +15,6 @@
 -(void)addNewOrder:(OrderModel *)newOrder;
 -(NSArray *)activeOrdersList;
 -(NSArray *)ordersList;
+-(void)removeOrder:(OrderModel *)order;
 
 @end

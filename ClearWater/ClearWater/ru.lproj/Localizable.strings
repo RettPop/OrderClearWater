@@ -23,9 +23,17 @@
 "error.NotAllFieldsFilled" = "Не все обязательные поля заполнены";
 "error.NotEnoughItemsOrdered" = "В заказе должно быть как минимум 2 бутыли воды";
 "error.DeliveryProhibitedInSunday" = "Доставка не работает в воскресенье";
-"cellText.ClearWater" = "Чистая вода";
-"cellText.FluoridedWater" = "Фторированная";
-"cellText.IodinatedWater" = "Йодированная";
+"cellText.ClearWater" = "Чистая";
+"cellText.FluoridedWater" = "Фтор";
+"cellText.IodinatedWater" = "Йод";
+"cellText.SMS" = "SMS";
+"cellText.Phone" = "Телефон";
+"cellText.Email" = "Email";
+"cellText.Code" = "Код";
+"cellText.FullName" = "ФИО";
+"cellText.Date" = "Дата";
+"cellText.Period" = "Период";
+
 "title.Error" = "Ошибка";
 "button.OK" = "OK";
 "button.NO" = "НЕТ";
@@ -33,6 +41,9 @@
 "button.Send" = "Отправка";
 "button.AddNew" = "Новый";
 "button.SendOrder" = "Отправить";
+"button.Delivered" = "Доставлено";
+"button.Confirm" = "Принято";
+"button.Back" = "Назад";
 
 "table.section.Client" = "Клиент";
 "table.section.Address" = "Адрес";
@@ -47,3 +58,5 @@
 "message.text.SendOrder?" = "Отправить заказ?";
 "message.title.SendOrder?" = "Отправка";
 "message.text.NoStoredOrders" = "Нет сохраненных заказов";
+"title.Order" = "Заказ";
+"title.NewOrder" = "Новый";

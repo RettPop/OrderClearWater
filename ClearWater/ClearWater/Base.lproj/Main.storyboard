@@ -8,7 +8,7 @@
         <!--Edit Order-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="VCEditOrder" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="VCEditOrder" id="BYZ-38-t0r" customClass="VCEditOrder" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -21,7 +21,7 @@
                                 <rect key="frame" x="0.0" y="616" width="375" height="45"/>
                                 <color key="backgroundColor" cyan="0.4910048246" magenta="0.094819761409999995" yellow="0.0" black="0.0" alpha="1" colorSpace="custom" customColorSpace="genericCMYKColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="45" id="Wh4-JB-3aO"/>
+                                    <constraint firstAttribute="height" priority="750" constant="45" id="Wh4-JB-3aO"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" title="Send order">
@@ -31,8 +31,8 @@
                                     <action selector="sendOrderTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="dxJ-bp-l9z"/>
                                 </connections>
                             </button>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="kj9-mj-QXl">
-                                <rect key="frame" x="0.0" y="64" width="375" height="544"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" preservesSuperviewLayoutMargins="YES" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="kj9-mj-QXl">
+                                <rect key="frame" x="0.0" y="64" width="375" height="559"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <sections/>
                                 <connections>
@@ -43,12 +43,13 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="FPZ-qF-gwV" firstAttribute="top" secondItem="kj9-mj-QXl" secondAttribute="bottom" constant="8" symbolic="YES" id="1WF-Mt-Uzj"/>
+                            <constraint firstItem="FPZ-qF-gwV" firstAttribute="top" secondItem="kj9-mj-QXl" secondAttribute="bottom" priority="750" constant="8" symbolic="YES" id="1WF-Mt-Uzj"/>
                             <constraint firstItem="kj9-mj-QXl" firstAttribute="trailing" secondItem="FPZ-qF-gwV" secondAttribute="trailing" id="25w-if-G7d"/>
                             <constraint firstItem="kj9-mj-QXl" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="5sk-x5-8Oe"/>
                             <constraint firstItem="kj9-mj-QXl" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="EiK-HM-zRD"/>
                             <constraint firstItem="kj9-mj-QXl" firstAttribute="leading" secondItem="FPZ-qF-gwV" secondAttribute="leading" id="K4Z-av-e29"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="FPZ-qF-gwV" secondAttribute="bottom" constant="6" id="fe7-AP-KMw"/>
+                            <constraint firstItem="kj9-mj-QXl" firstAttribute="bottom" secondItem="FPZ-qF-gwV" secondAttribute="bottom" priority="250" id="pde-4W-Kpy"/>
                             <constraint firstAttribute="trailing" secondItem="kj9-mj-QXl" secondAttribute="trailing" id="xRL-YJ-cFd"/>
                         </constraints>
                     </view>
@@ -56,7 +57,9 @@
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
                     <connections>
                         <outlet property="btnSendOrder" destination="FPZ-qF-gwV" id="YCX-5g-IRo"/>
+                        <outlet property="constrSendButtonHeight" destination="1WF-Mt-Uzj" id="tgz-0G-NFS"/>
                         <outlet property="tableView" destination="kj9-mj-QXl" id="gJs-hG-htN"/>
+                        <outlet property="tableViewBottom" destination="pde-4W-Kpy" id="qJG-CR-9iC"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

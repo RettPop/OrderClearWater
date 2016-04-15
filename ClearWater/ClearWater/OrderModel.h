@@ -19,6 +19,8 @@
 -(NSDictionary *)valuesDict;
 -(NSString *)scheduleDateStr;
 -(void)markSent;
+-(void)markConfirmed;
+-(void)markDelivered;
 -(id)initWithOrder:(OrderModel *)order;
 
 @property (strong, nonatomic) NSString *clientCode;
@@ -39,7 +41,7 @@
 @property (strong, nonatomic) NSString *orderComments;
 @property (strong, nonatomic, readonly) NSDate   *dateSent;
 @property (strong, nonatomic, readonly) NSDate   *dateCreated;
-@property (nonatomic, assign)           BOOL delivered;
-@property (nonatomic, assign)           BOOL confirmed;
+@property (strong, nonatomic, readonly) NSDate   *dateConfirmed;
+@property (nonatomic, assign, readonly)     BOOL delivered;
 
 @end

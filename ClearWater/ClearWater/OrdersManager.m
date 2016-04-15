@@ -85,17 +85,14 @@
             [orders addObject:[NSKeyedUnarchiver unarchiveObjectWithData:oneData]];
         }
     }
- 
-    // for backward compatibility need to move old order to common array and remove it form user defaults
-    NSData *oldOrder = [def valueForKey:kUserDefsKeyLastOrder];
-    if( oldOrder )
-    {
-        [orders addObject:[NSKeyedUnarchiver unarchiveObjectWithData:oldOrder]];
-        [def removeObjectForKey:kUserDefsKeyLastOrder];
-    }
     
     return orders;
 }
 
+-(void)removeOrder:(OrderModel *)order
+{
+    [_orders removeObject:order];
+    [self storeOrders:_orders];
+}
 
 @end

@@ -9,6 +9,7 @@
 #import "OrdersList.h"
 #import "OrdersManager.h"
 #import "OrderModel.h"
+#import "VCEditOrder.h"
 
 @interface OrdersList ()
 {
@@ -30,6 +31,9 @@
     
     [[self navigationItem] setTitle:LOC(@"title.MainScreen")];
     [_btnCreateOrder setTitle:LOC(@"button.AddNew")];
+    
+    // customise back button
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:LOC(@"button.Back") style:UIBarButtonItemStylePlain target:nil action:nil];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -53,7 +57,7 @@
     // Pass the selected object to the new view controller.
 }
 */
-
+ 
 #pragma mark -
 #pragma mark UITableView
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -70,11 +74,13 @@
 {
 #define kFontActiveOrderCellTitle [UIFont systemFontOfSize:15.f weight:UIFontWeightBold]
 #define kFontInactiveOrderCellTitle [UIFont systemFontOfSize:15.f weight:UIFontWeightRegular]
+
     NSString *cellID = @"OrderCell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID];
     if( !cell )
     {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellID];
+        [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
     }
     
     OrderModel *oneOrder = [_orders objectAtIndex:indexPath.row];
@@ -92,5 +98,59 @@
     return cell;
 }
 
+-(BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return YES;
+}
+
+//-(NSArray<UITableViewRowAction *> *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    UITableViewRowAction *actionConfirm = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleNormal title:LOC(@"button.Confirm") handler:^(UITableViewRowAction * _Nonnull action, NSIndexPath * _Nonnull indexPath) {
+//        OrderModel *oneOrder = [_orders objectAtIndex:[indexPath row]];
+//        [oneOrder markConfirmed];
+//    }];
+//    
+//    UITableViewRowAction *actionDeliver = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleNormal title:LOC(@"button.Delivered") handler:^(UITableViewRowAction * _Nonnull action, NSIndexPath * _Nonnull indexPath) {
+//        OrderModel *oneOrder = [_orders objectAtIndex:[indexPath row]];
+//        [oneOrder markDelivered];
+//    }];
+//    
+//    UITableViewRowAction *actionDelete = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDestructive title:LOC(@"button.Delete") handler:^(UITableViewRowAction * _Nonnull action, NSIndexPath * _Nonnull indexPath) {
+//        OrderModel *oneOrder = [_orders objectAtIndex:[indexPath row]];
+//        [oneOrder markConfirmed];
+//    }];
+//
+//    return @[actionConfirm, actionDeliver, actionDelete];
+//}
+//
+//-(UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    return UITableViewCellEditingStyleDelete;
+//}
+
+-(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(nonnull NSIndexPath *)indexPath
+{
+    if( editingStyle == UITableViewCellEditingStyleDelete )
+    {
+        // theoretically we can not gain here while not History or Favorites table is active due canEditRowAtIndexPath condition
+        OrderModel *oneOrder = [_orders objectAtIndex:[indexPath row]];
+        [_ordersManager removeOrder:oneOrder];
+        _orders = [_ordersManager ordersList];
+        [_tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+    }
+}
+
+-(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+#define kFontDetailedLableTitle [UIFont systemFontOfSize:10.f weight:UIFontWeightRegular]
+    [[cell detailTextLabel] setFont:kFontDetailedLableTitle];
+}
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    VCEditOrder *vc = [[[self navigationController] storyboard] instantiateViewControllerWithIdentifier:@"VCEditOrder"];
+    [vc displayOrder:[_orders objectAtIndex:[indexPath row]]];
+    [self.navigationController pushViewController:vc animated:YES];
+}
 
 @end
