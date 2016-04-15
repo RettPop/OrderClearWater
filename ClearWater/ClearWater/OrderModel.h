@@ -18,6 +18,8 @@
 -(void)orderIonidedWater:(NSUInteger)amount;
 -(NSDictionary *)valuesDict;
 -(NSString *)scheduleDateStr;
+-(void)markSent;
+-(id)initWithOrder:(OrderModel *)order;
 
 @property (strong, nonatomic) NSString *clientCode;
 @property (strong, nonatomic) NSString *addressCity;
@@ -35,5 +37,9 @@
 @property (strong, nonatomic) NSString *confirmPhone;
 @property (strong, nonatomic) NSString *confirmEmail;
 @property (strong, nonatomic) NSString *orderComments;
+@property (strong, nonatomic, readonly) NSDate   *dateSent;
+@property (strong, nonatomic, readonly) NSDate   *dateCreated;
+@property (nonatomic, assign)           BOOL delivered;
+@property (nonatomic, assign)           BOOL confirmed;
 
 @end

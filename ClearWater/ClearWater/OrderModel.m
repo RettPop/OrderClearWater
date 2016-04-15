@@ -28,6 +28,10 @@
     encObj(_confirmPhone);
     encObj(_confirmEmail);
     encObj(_orderComments);
+    encObj(_dateSent);
+    encObj(_dateCreated);
+    encBool(_delivered);
+    encBool(_confirmed);
 }
 
 - (nullable instancetype)initWithCoder:(NSCoder *)aDecoder
@@ -51,6 +55,10 @@
         decObj(_confirmPhone);
         decObj(_confirmEmail);
         decObj(_orderComments);
+        decObj(_dateSent);
+        decObj(_dateCreated);
+        decBool(_delivered);
+        decBool(_confirmed);
     }
     
     return self;
@@ -78,6 +86,36 @@
         _confirmPhone = @"";
         _confirmEmail = @"";
         _orderComments = @"";
+        _dateSent = nil;
+        _dateCreated = [NSDate date];
+    }
+    
+    return self;
+}
+
+-(id)initWithOrder:(OrderModel *)order
+{
+    self = [super init];
+    if( self )
+    {
+        _clientCode = [order clientCode];
+        _addressCity = [order addressCity];
+        _addressStreet = [order addressStreet];
+        _addressHouse = [order addressHouse];
+        _addressApt = [order addressApt];
+        _addressContactPhone = [order addressContactPhone];
+        _addressContactName =  [order addressContactName];
+        _scheduleTime =  [order scheduleTime];
+        _scheduleDate = nil;
+        _contentClearWater = @([order clearWater]);
+        _contentFluorided = @([order fluoridedWater]);
+        _contentIodinated = @([order iondinatedWater]);
+        _confirmSMS =  [order confirmSMS];
+        _confirmPhone = [order confirmPhone];
+        _confirmEmail = [order confirmEmail];
+        _orderComments = [order orderComments];
+        _dateSent = nil;
+        _dateCreated = [NSDate date];
     }
     
     return self;
@@ -137,6 +175,13 @@
     NSDateFormatter *form = [[NSDateFormatter alloc] init];
     [form setDateFormat:kDateFormat];
     return [form stringFromDate:_scheduleDate];
+}
+
+-(void)markSent
+{
+    if( !_dateSent ) {
+        _dateSent = [NSDate date];
+    }
 }
 
 @end

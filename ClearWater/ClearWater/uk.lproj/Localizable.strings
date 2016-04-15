@@ -31,6 +31,8 @@
 "button.NO" = "НI";
 "button.YES" = "ТАК";
 "button.Send" = "Вiдправка";
+"button.AddNew" = "Новий";
+"button.SendOrder" = "Вiдiслати";
 
 "table.section.Client" = "Клиент";
 "table.section.Address" = "Адреса";
@@ -45,3 +47,4 @@
 
 "message.text.SendOrder?" = "Вiдправити замовлення?";
 "message.title.SendOrder?" = "Вiдправка";
+"message.text.NoStoredOrders" = "Ранiше вiдправлених замовлень не знайдено";

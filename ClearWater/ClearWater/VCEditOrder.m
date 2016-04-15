@@ -12,11 +12,11 @@
 #import "OrderModel.h"
 #import "ServerHandler.h"
 #import "CWSchedule.h"
+#import "OrdersManager.h"
 
 #define kTableGeneralCellID @"kTableGeneralCellID"
 #define CompCellID(x,y) [NSString stringWithFormat:@"SECTION %li ITEM %li", (long)x, (long)y]
 #define kDefaultCellHeight 60.f
-#define kUserDefsKeyLastOrder @"LastOrder"
 #define kDatePickerHeight 150.f
 #define kDeliveryTimePickerHeight kDatePickerHeight
 
@@ -72,6 +72,7 @@ typedef enum : NSUInteger {
     UIView *_activityBG;
     UILabel *_activityText;
     NSDateFormatter *_dateFormatter;
+    OrdersManager *_ordersManager;
 }
 -(IBAction)sendOrderTapped:(id)sender;
 
@@ -108,14 +109,18 @@ typedef enum : NSUInteger {
 //----------------------------------------------------------------------
 @implementation VCEditOrder
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
     
     _dateFormatter = [[NSDateFormatter alloc] init]; // Apple recommends to avoid frequent formatter creating. So, cache it https://developer.apple.com/library/ios/documentation/Cocoa/Conceptual/DataFormatting/Articles/dfDateFormatting10_4.html#//apple_ref/doc/uid/TP40002369-SW5
     
     [self initFields];
+    _ordersManager = [OrdersManager new];
     _order = [[OrderModel alloc] init];
     [[self navigationItem] setTitle:LOC(@"title.MainScreen")];
+    [_btnSendOrder setTitle:LOC(@"button.SendOrder") forState:UIControlStateNormal];
+    
     [[self navigationItem] setRightBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:LOC(@"button.RestoreOrder") style:UIBarButtonItemStylePlain target:self action:@selector(restoreOrderTapped:)]];
 
     // handle keyboard appearance to change UI layout
@@ -143,7 +148,7 @@ typedef enum : NSUInteger {
         _order = model;
     }
     else {
-        [self showError:@"No previously sent orders found"];
+        [self showError:LOC(@"message.text.NoStoredOrders")];
     }
 }
 
@@ -182,7 +187,6 @@ typedef enum : NSUInteger {
     [_pickerScheduleDate setDataSource:self];
     [_pickerScheduleDate selectRow:0 inComponent:0 animated:NO];
     [_pickerScheduleDate setHidden:YES];
-    [_pickerScheduleDate addDebugBorder];
 
     // delivery time periods picker setting
     _pickerScheduleTime = [[UIPickerView alloc] initWithFrame:CGRectMake(0, 0, 375, kDeliveryTimePickerHeight)];
@@ -191,12 +195,6 @@ typedef enum : NSUInteger {
     [_pickerScheduleTime selectRow:0 inComponent:0 animated:NO];
     [_pickerScheduleTime setHidden:YES];
     _deliveryTimes = [CWSchedule deliveryPeriods];
-    [_pickerScheduleTime addDebugBorder];
-}
-
--(void)deliveryTimeSelected:(id)sender
-{
-    
 }
 
 -(UILabel *)newLabel
@@ -242,23 +240,14 @@ typedef enum : NSUInteger {
 -(UITextField *)newFieldWithPlaceholder:(NSString *) placeholder andKeyboard:(UIKeyboardType)keyboardType
 {
     UITextField *newField = [[UITextField alloc] init];
-//    [newField setBorderStyle:UITextBorderStyleRoundedRect];
     [newField setBorderStyle:UITextBorderStyleNone];
     [newField setKeyboardType:keyboardType];
     [newField setReturnKeyType:UIReturnKeyDone];
     [newField setDelegate:self];
     [newField setAutocorrectionType:UITextAutocorrectionTypeNo];
     [newField setPlaceholder:placeholder];
-    //[newField setBackgroundColor:[UIColor grayColor]];
     
     return newField;
-}
-
--(void)formatTextField:(UITextField *)field forCell:(UITableViewCell *)cell
-{
-    //    field.frame = [[cell contentView] frame];
-    //    [field changeSizeWidthDelta:BORDER_DEFAULT heightDelta:BORDER_DEFAULT];
-    //    [field changeFrameXDelta:SHIFT_DEFAULT yDelta:SHIFT_DEFAULT];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -284,10 +273,10 @@ typedef enum : NSUInteger {
     
     [self hidePickers];
     
-    DEBUG_START
-    //  Delete after tests. Only successfuly sent Order is tended to be stored
-    [self storeOrder:_order];
-    DEBUG_END
+//    DEBUG_START
+//    //  Delete after tests. Only successfuly sent Order is tended to be stored
+//    [self storeOrder:_order];
+//    DEBUG_END
     [self fillOrderFromUI];
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:LOC(@"message.title.SendOrder?")
                                                                    message:LOC(@"message.text.SendOrder?")
@@ -302,39 +291,35 @@ typedef enum : NSUInteger {
 -(void)processNewOrder:(OrderModel *)order
 {
     [self showActivity];
-//    ASYNC_BLOCK_START
+    ASYNC_BLOCK_START
     BOOL isSent = [[ServerHandler sharedInstance] sendOrder:order];
     
     SYNC_BLOCK_START
-    if( isSent ) {
-        [self storeOrder:order];
+    if( isSent )
+    {
+        [order markSent];
+        [_ordersManager addNewOrder:order];
         [self showMessage:LOC(@"message.OrderWasSent") withTitle:LOC(@"title.Success")];
     }
-    else {
+    else
+    {
         [self showError:LOC(@"message.ErrorSendingOrder")];
     }
     [self hideActivity];
     SYNC_BLOCK_END
-//    ASYNC_BLOCK_END
+    ASYNC_BLOCK_END
 }
 
--(void)storeOrder:(OrderModel *)order
-{
-    NSUserDefaults *def = [NSUserDefaults standardUserDefaults];
-    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:_order];
-    [def setObject:data forKey:kUserDefsKeyLastOrder];
-}
+//-(void)storeOrder:(OrderModel *)order
+//{
+//    NSUserDefaults *def = [NSUserDefaults standardUserDefaults];
+//    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:_order];
+//    [def setObject:data forKey:kUserDefsKeyLastOrder];
+//}
 
 -(OrderModel *)restoreOrder
 {
-    NSUserDefaults *def = [NSUserDefaults standardUserDefaults];
-    NSData *data = [def valueForKey:kUserDefsKeyLastOrder];
-    OrderModel *model = nil;
-    if( data ) {
-        model = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-    }
-    
-    return model;
+    return [_ordersManager lastOrder];
 }
 
 -(void)fillOrderFromUI
@@ -554,7 +539,6 @@ typedef enum : NSUInteger {
 #define BORDER_DEFAULT -20.f
 #define SHIFT_DEFAULT 10.f
     
-    NSLog(@"Create cell %@ ", cellID);
     if( !cell )
     {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellID];
@@ -583,7 +567,6 @@ typedef enum : NSUInteger {
                 [field alignVerticalsWithMasterView:[field superview]];
                 [field alignHorizontalsWithMasterView:[field superview]];
                 [[cell detailTextLabel] setText:[field placeholder]];
-                DLog(@"%@", field);
                 break;
             }
             case SECTION_ADDRESS:
@@ -736,79 +719,74 @@ typedef enum : NSUInteger {
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // switch picker visibility
-    switch (indexPath.section)
+    if( SECTION_SCHEDULE != indexPath.section)
     {
-        case SECTION_SCHEDULE:
+        [self hidePickers];
+    }
+    else
+    {
+        switch (indexPath.row)
         {
-            switch (indexPath.row)
+            case ITEM_SCHEDULE_DATE:
             {
-                case ITEM_SCHEDULE_DATE:
+                // hide Time picker preliminary
+                [self setPicker:_pickerScheduleTime
+                         hidden:YES
+                   inCellOnPath:[NSIndexPath indexPathForRow:ITEM_SCHEDULE_DATE_PICKER inSection:SECTION_SCHEDULE]
+                    ofTableView:tableView];
+
+                
+                // switch picker visibility
+                [self setPicker:_pickerScheduleDate
+                        hidden:NOT([_pickerScheduleDate isHidden])
+                   inCellOnPath:[NSIndexPath indexPathForRow:ITEM_SCHEDULE_DATE_PICKER inSection:SECTION_SCHEDULE]
+                    ofTableView:tableView];
+
+                // if corresponding text field already contains date, try to slect it in the picker
+                if( ([_order scheduleDate]) && NOT([_pickerScheduleDate isHidden]) )
                 {
-                    // hide Time picker preliminary
-                    [self setPicker:_pickerScheduleTime
-                             hidden:YES
-                       inCellOnPath:[NSIndexPath indexPathForRow:ITEM_SCHEDULE_DATE_PICKER inSection:SECTION_SCHEDULE]
-                        ofTableView:tableView];
-
-                    
-                    // switch picker visibility
-                    [self setPicker:_pickerScheduleDate
-                            hidden:NOT([_pickerScheduleDate isHidden])
-                       inCellOnPath:[NSIndexPath indexPathForRow:ITEM_SCHEDULE_DATE_PICKER inSection:SECTION_SCHEDULE]
-                        ofTableView:tableView];
-
-                    // if corresponding text field already contains date, try to slect it in the picker
-                    if( ([_order scheduleDate]) && NOT([_pickerScheduleDate isHidden]) )
+                    for (NSDate *oneDate in _deliveryDates)
                     {
-                        for (NSDate *oneDate in _deliveryDates)
+                        if( [oneDate isEqualToDate:[_order scheduleDate]] )
                         {
-                            if( [oneDate isEqualToDate:[_order scheduleDate]] )
-                            {
-                                [_pickerScheduleDate selectRow:[_deliveryDates indexOfObject:oneDate] inComponent:0 animated:NO];
-                            }
+                            [_pickerScheduleDate selectRow:[_deliveryDates indexOfObject:oneDate] inComponent:0 animated:NO];
                         }
                     }
-
-                    break;
                 }
-                case ITEM_SCHEDULE_TIME:
-                {
-                    // hide Date picker preliminary
-                    [self setPicker:_pickerScheduleDate
-                             hidden:YES
-                       inCellOnPath:[NSIndexPath indexPathForRow:ITEM_SCHEDULE_DATE_PICKER inSection:SECTION_SCHEDULE]
-                        ofTableView:tableView];
 
-                    
-                    // switch picker visibility
-                    [self setPicker:_pickerScheduleTime
-                            hidden:NOT([_pickerScheduleTime isHidden])
-                       inCellOnPath:[NSIndexPath indexPathForRow:ITEM_SCHEDULE_TIME_PICKER inSection:SECTION_SCHEDULE]
-                        ofTableView:tableView];
-
-                    // if corresponding text field already contains some text, try to find it in array and select the item in picker
-                    if( ([[_scheduleTime text] length] > 0) && NOT([_pickerScheduleTime isHidden]) )
-                    {
-                        for (NSString *oneStr in _deliveryTimes) {
-                            if( [oneStr isEqualToString:[_scheduleTime text]] )
-                            {
-                                [_pickerScheduleTime selectRow:[_deliveryTimes indexOfObject:oneStr] inComponent:0 animated:NO];
-                                break;
-                            }
-                        }
-                    }
-                    
-                    break;
-                }
-                default:
-                    break;
+                break;
             }
-            break;
-        }
-        default:
-        {
-            [self hidePickers];
-            break;
+            case ITEM_SCHEDULE_TIME:
+            {
+                // hide Date picker preliminary
+                [self setPicker:_pickerScheduleDate
+                         hidden:YES
+                   inCellOnPath:[NSIndexPath indexPathForRow:ITEM_SCHEDULE_DATE_PICKER inSection:SECTION_SCHEDULE]
+                    ofTableView:tableView];
+
+                
+                // switch picker visibility
+                [self setPicker:_pickerScheduleTime
+                        hidden:NOT([_pickerScheduleTime isHidden])
+                   inCellOnPath:[NSIndexPath indexPathForRow:ITEM_SCHEDULE_TIME_PICKER inSection:SECTION_SCHEDULE]
+                    ofTableView:tableView];
+
+                // if corresponding text field already contains some text, try to find it in array and select the item in picker
+                if( ([[_scheduleTime text] length] > 0) && NOT([_pickerScheduleTime isHidden]) )
+                {
+                    for (NSString *oneStr in _deliveryTimes) {
+                        if( [oneStr isEqualToString:[_scheduleTime text]] )
+                        {
+                            [_pickerScheduleTime selectRow:[_deliveryTimes indexOfObject:oneStr] inComponent:0 animated:NO];
+                            break;
+                        }
+                    }
+                }
+                
+                break;
+            }
+            default:
+                break;
         }
     }
 }

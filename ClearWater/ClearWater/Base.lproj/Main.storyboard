@@ -17,20 +17,11 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="kj9-mj-QXl">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="608"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <sections/>
-                                <connections>
-                                    <outlet property="dataSource" destination="BYZ-38-t0r" id="hOK-Pd-Pm2"/>
-                                    <outlet property="delegate" destination="BYZ-38-t0r" id="SEZ-T2-tdJ"/>
-                                </connections>
-                            </tableView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FPZ-qF-gwV">
                                 <rect key="frame" x="0.0" y="616" width="375" height="45"/>
                                 <color key="backgroundColor" cyan="0.4910048246" magenta="0.094819761409999995" yellow="0.0" black="0.0" alpha="1" colorSpace="custom" customColorSpace="genericCMYKColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="45" id="IhE-eO-MOi"/>
+                                    <constraint firstAttribute="height" constant="45" id="Wh4-JB-3aO"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" title="Send order">
@@ -40,20 +31,28 @@
                                     <action selector="sendOrderTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="dxJ-bp-l9z"/>
                                 </connections>
                             </button>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="kj9-mj-QXl">
+                                <rect key="frame" x="0.0" y="64" width="375" height="544"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <sections/>
+                                <connections>
+                                    <outlet property="dataSource" destination="BYZ-38-t0r" id="hOK-Pd-Pm2"/>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="SEZ-T2-tdJ"/>
+                                </connections>
+                            </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="kj9-mj-QXl" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="8K8-uO-eNq"/>
-                            <constraint firstItem="kj9-mj-QXl" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="Eul-Dc-Tsh"/>
-                            <constraint firstItem="kj9-mj-QXl" firstAttribute="trailing" secondItem="FPZ-qF-gwV" secondAttribute="trailing" id="QH1-bc-Tdp"/>
-                            <constraint firstItem="FPZ-qF-gwV" firstAttribute="top" secondItem="kj9-mj-QXl" secondAttribute="bottom" constant="8" symbolic="YES" id="ZJb-qm-FXa"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="FPZ-qF-gwV" secondAttribute="bottom" constant="6" id="baD-0F-knK"/>
-                            <constraint firstItem="kj9-mj-QXl" firstAttribute="leading" secondItem="FPZ-qF-gwV" secondAttribute="leading" id="hVt-su-j2N"/>
-                            <constraint firstAttribute="trailing" secondItem="kj9-mj-QXl" secondAttribute="trailing" id="jwh-a0-0JP"/>
+                            <constraint firstItem="FPZ-qF-gwV" firstAttribute="top" secondItem="kj9-mj-QXl" secondAttribute="bottom" constant="8" symbolic="YES" id="1WF-Mt-Uzj"/>
+                            <constraint firstItem="kj9-mj-QXl" firstAttribute="trailing" secondItem="FPZ-qF-gwV" secondAttribute="trailing" id="25w-if-G7d"/>
+                            <constraint firstItem="kj9-mj-QXl" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="5sk-x5-8Oe"/>
+                            <constraint firstItem="kj9-mj-QXl" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="EiK-HM-zRD"/>
+                            <constraint firstItem="kj9-mj-QXl" firstAttribute="leading" secondItem="FPZ-qF-gwV" secondAttribute="leading" id="K4Z-av-e29"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="FPZ-qF-gwV" secondAttribute="bottom" constant="6" id="fe7-AP-KMw"/>
+                            <constraint firstAttribute="trailing" secondItem="kj9-mj-QXl" secondAttribute="trailing" id="xRL-YJ-cFd"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="mxL-gm-brG" userLabel="I"/>
-                    <nil key="simulatedTopBarMetrics"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
                     <connections>
                         <outlet property="btnSendOrder" destination="FPZ-qF-gwV" id="YCX-5g-IRo"/>
@@ -62,7 +61,53 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1065.5" y="327.5"/>
+            <point key="canvasLocation" x="1542.5" y="332.5"/>
+        </scene>
+        <!--Orders list-->
+        <scene sceneID="nrf-aP-b2V">
+            <objects>
+                <viewController storyboardIdentifier="OrdersList" id="cy5-GR-uRe" customClass="OrdersList" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="52g-h0-PWn"/>
+                        <viewControllerLayoutGuide type="bottom" id="Gqx-BN-mlC"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="UwG-XQ-xqL">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="VoU-HE-ahZ">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="cy5-GR-uRe" id="XTJ-4k-KZD"/>
+                                    <outlet property="delegate" destination="cy5-GR-uRe" id="46b-Yt-L7g"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="VoU-HE-ahZ" secondAttribute="trailing" id="2ay-S8-Eh2"/>
+                            <constraint firstItem="VoU-HE-ahZ" firstAttribute="leading" secondItem="UwG-XQ-xqL" secondAttribute="leading" id="8bT-gv-XcZ"/>
+                            <constraint firstItem="VoU-HE-ahZ" firstAttribute="top" secondItem="UwG-XQ-xqL" secondAttribute="top" id="inl-JZ-LZa"/>
+                            <constraint firstItem="VoU-HE-ahZ" firstAttribute="bottom" secondItem="Gqx-BN-mlC" secondAttribute="top" id="yf5-jI-OFS"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Orders list" id="JXM-2a-paP">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="WnL-5C-m8D">
+                            <connections>
+                                <segue destination="BYZ-38-t0r" kind="show" id="DEX-zf-n3a"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
+                    <connections>
+                        <outlet property="btnCreateOrder" destination="WnL-5C-m8D" id="L1e-4I-Ke1"/>
+                        <outlet property="tableView" destination="VoU-HE-ahZ" id="hfJ-Mj-CIg"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="csf-MW-VDs" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1107.5" y="332.5"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="rTK-70-qRO">
@@ -76,7 +121,7 @@
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="a3l-BV-5HQ"/>
+                        <segue destination="cy5-GR-uRe" kind="relationship" relationship="rootViewController" id="hLe-yX-Zoa"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oW4-Iu-9Tx" userLabel="First Responder" sceneMemberID="firstResponder"/>

@@ -31,6 +31,8 @@
 "button.NO" = "NO";
 "button.YES" = "YES";
 "button.Send" = "Send";
+"button.AddNew" = "New";
+"button.SendOrder" = "Send order";
 
 "table.section.Client" = "Client";
 "table.section.Address" = "Address";
@@ -43,3 +45,4 @@
 "message.ErrorSendingOrder" = "Error sending order. Try again later.";
 "message.text.SendOrder?" = "Continue with order send?";
 "message.title.SendOrder?" = "Send order";
+"message.text.NoStoredOrders" = "No previously sent orders found";

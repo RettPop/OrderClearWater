@@ -58,5 +58,8 @@
 #define kDateFormat @"dd/MM/yyyy"
 #define kDateFormatWithDay @"EEEE dd/MM/yyyy"
 
+#define kUserDefsKeyLastOrder @"LastOrder"
+#define kUserDefsKeyOrders @"Orders"
+
 
 #endif /* CWConstants_h */

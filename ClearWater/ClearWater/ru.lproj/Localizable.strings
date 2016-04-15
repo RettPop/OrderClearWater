@@ -31,7 +31,8 @@
 "button.NO" = "НЕТ";
 "button.YES" = "ДА";
 "button.Send" = "Отправка";
-
+"button.AddNew" = "Новый";
+"button.SendOrder" = "Отправить";
 
 "table.section.Client" = "Клиент";
 "table.section.Address" = "Адрес";
@@ -45,3 +46,4 @@
 "message.ErrorSendingOrder" = "Ошибка отправки заказа. Попробуйте позже.";
 "message.text.SendOrder?" = "Отправить заказ?";
 "message.title.SendOrder?" = "Отправка";
+"message.text.NoStoredOrders" = "Нет сохраненных заказов";
