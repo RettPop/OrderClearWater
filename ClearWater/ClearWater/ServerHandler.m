@@ -8,8 +8,8 @@
 
 #import "ServerHandler.h"
 
-//#define SERVER_URL @"http://www.clearwater.ua/order/_system/jsorder.php"
-#define SERVER_URL @"https://requestb.in/p9vw66p9"
+#define SERVER_URL @"http://www.clearwater.ua/order/_system/jsorder.php"
+//#define SERVER_URL @"https://requestb.in/p9vw66p9"
 
 @implementation ServerHandler
 
