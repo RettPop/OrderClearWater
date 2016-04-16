@@ -60,3 +60,4 @@
 "message.text.NoStoredOrders" = "Нет сохраненных заказов";
 "title.Order" = "Заказ";
 "title.NewOrder" = "Новый";
+"text.NoOrderAvailable" = "Заказов еще нет. Нажмите \"+\" чтобы создать новый.";

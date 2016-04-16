@@ -32,7 +32,10 @@
 
 -(OrderModel *)lastOrder
 {
-    OrderModel *newOrder = [[OrderModel alloc] initWithOrder:[_orders lastObject]];
+    OrderModel *newOrder = nil;
+    if( [_orders lastObject] ) {
+        newOrder = [[OrderModel alloc] initWithOrder:[_orders lastObject]];
+    }
     return newOrder;
 }
 

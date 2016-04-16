@@ -70,3 +70,4 @@
 "message.text.NoStoredOrders" = "No previously sent orders found";
 "title.Order" = "Order";
 "title.NewOrder" = "New";
+"text.NoOrderAvailable" = "No orders yet. Tap \"+\" button to create new.";

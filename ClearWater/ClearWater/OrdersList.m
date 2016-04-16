@@ -46,6 +46,16 @@
     _ordersManager = [OrdersManager new];
     _orders = [_ordersManager ordersList];
     [_tableView reloadData];
+    if( [_orders count] < 1 ) {
+        [self showMessage:LOC(@"text.NoOrderAvailable") withTitle:LOC(@"title.MainScreen")];
+    }
+}
+
+-(void)showMessage:(NSString *)message withTitle:(NSString *)title
+{
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+    [alert addAction:[UIAlertAction actionWithTitle:LOC(@"button.OK") style:UIAlertActionStyleDefault handler:nil]];
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
 /*

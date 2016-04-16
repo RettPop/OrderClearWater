@@ -167,7 +167,7 @@ typedef enum : NSUInteger {
         _order = model;
     }
     else {
-        [self showError:LOC(@"message.text.NoStoredOrders")];
+        [self showMessage:LOC(@"message.text.NoStoredOrders") withTitle:LOC(@"title.MainScreen")];
     }
 }
 

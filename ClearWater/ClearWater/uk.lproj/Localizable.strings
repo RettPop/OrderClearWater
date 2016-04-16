@@ -62,3 +62,4 @@
 "message.text.NoStoredOrders" = "Ранiше вiдправлених замовлень не знайдено";
 "title.Order" = "Замова";
 "title.NewOrder" = "Новий";
+"text.NoOrderAvailable" = "Замовлень ще нема. Натиснить \"+\" щоб створити нове.";
