@@ -325,6 +325,14 @@ typedef enum : NSUInteger {
         [order markSent];
         [_ordersManager addNewOrder:order];
         [self showMessage:LOC(@"message.OrderWasSent") withTitle:LOC(@"title.Success")];
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:LOC(@"title.Success")
+                                                                       message:LOC(@"message.OrderWasSent")
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+        [alert addAction:[UIAlertAction actionWithTitle:LOC(@"button.OK") style:UIAlertActionStyleDefault handler:nil]];
+        [self presentViewController:alert animated:YES completion:^{
+            [[self navigationController] popViewControllerAnimated:YES];
+        }];
+
     }
     else
     {

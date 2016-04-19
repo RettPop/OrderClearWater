@@ -71,3 +71,7 @@
 "title.Order" = "Order";
 "title.NewOrder" = "New";
 "text.NoOrderAvailable" = "No orders yet. Tap \"+\" button to create new.";
+
+"title.Orders" = "Orders";
+"title.Contacts" = "Contacts";
+"title.About" = "About";

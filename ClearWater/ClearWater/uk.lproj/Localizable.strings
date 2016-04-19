@@ -63,3 +63,7 @@
 "title.Order" = "Замова";
 "title.NewOrder" = "Новий";
 "text.NoOrderAvailable" = "Замовлень ще нема. Натиснить \"+\" щоб створити нове.";
+
+"title.Orders" = "Замовлення";
+"title.Contacts" = "Контакти";
+"title.About" = "Про додаток";

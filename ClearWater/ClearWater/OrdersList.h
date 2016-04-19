@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface OrdersList : UIViewController<UITableViewDelegate, UITableViewDataSource>
+@interface OrdersList : UIViewController<UITableViewDelegate, UITableViewDataSource, UITabBarDelegate>
 
 @end

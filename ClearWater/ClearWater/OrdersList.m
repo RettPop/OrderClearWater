@@ -11,6 +11,12 @@
 #import "OrderModel.h"
 #import "VCEditOrder.h"
 
+typedef enum : NSUInteger {
+    APPSCREEN_ORDERS = 1,
+    APPSCREEN_ABOUT,
+    APPSCREEN_CONTACTS,
+} APPSCREEN;
+
 @interface OrdersList ()
 {
     NSArray *_orders;
@@ -19,6 +25,10 @@
 
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *btnCreateOrder;
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
+
+@property (strong, nonatomic) IBOutlet UITabBarItem *baritmOrders;
+@property (strong, nonatomic) IBOutlet UITabBarItem *baritmAbout;
+@property (strong, nonatomic) IBOutlet UITabBarItem *baritmContacts;
 
 @end
 
@@ -46,9 +56,6 @@
     _ordersManager = [OrdersManager new];
     _orders = [_ordersManager ordersList];
     [_tableView reloadData];
-    if( [_orders count] < 1 ) {
-        [self showMessage:LOC(@"text.NoOrderAvailable") withTitle:LOC(@"title.MainScreen")];
-    }
 }
 
 -(void)showMessage:(NSString *)message withTitle:(NSString *)title
@@ -56,6 +63,13 @@
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
     [alert addAction:[UIAlertAction actionWithTitle:LOC(@"button.OK") style:UIAlertActionStyleDefault handler:nil]];
     [self presentViewController:alert animated:YES completion:nil];
+}
+
+-(void)customizeItems
+{
+    [_baritmOrders setTitle:LOC(@"title.Orders")];
+    [_baritmContacts setTitle:LOC(@"title.Contacts")];
+    [_baritmAbout setTitle:LOC(@"title.About")];
 }
 
 /*
@@ -94,7 +108,8 @@
     }
     
     OrderModel *oneOrder = [_orders objectAtIndex:indexPath.row];
-    [[cell textLabel] setText:[oneOrder scheduleDateStr]];
+    NSString *cellTitle = [NSString stringWithFormat:@"%@ %@", [oneOrder scheduleDateStr], [oneOrder scheduleTime]];
+    [[cell textLabel] setText:cellTitle];
     NSString *orderContent = [NSString stringWithFormat:@"%@(%li), %@(%li), %@(%li)",
                               LOC(@"cellText.ClearWater"), (long)[oneOrder clearWater],
                               LOC(@"cellText.FluoridedWater"), (long)[oneOrder fluoridedWater],
@@ -161,6 +176,24 @@
     VCEditOrder *vc = [[[self navigationController] storyboard] instantiateViewControllerWithIdentifier:@"VCEditOrder"];
     [vc displayOrder:[_orders objectAtIndex:[indexPath row]]];
     [self.navigationController pushViewController:vc animated:YES];
+}
+
+-(void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item
+{
+    UIViewController *vc = nil;
+    switch ([item tag]) {
+        case APPSCREEN_CONTACTS:
+            vc = [[[self navigationController] storyboard] instantiateViewControllerWithIdentifier:@"VCContacts"];
+            break;
+        case APPSCREEN_ABOUT:
+            vc = [[[self navigationController] storyboard] instantiateViewControllerWithIdentifier:@"VCAbout"];
+            break;
+            
+        default:
+            break;
+    }
+    [self.navigationController pushViewController:vc animated:YES];
+    [tabBar setSelectedItem:[[tabBar items] firstObject]];
 }
 
 @end
