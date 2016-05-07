@@ -10,6 +10,9 @@
 #import "OrdersManager.h"
 #import "OrderModel.h"
 #import "VCEditOrder.h"
+#import "WebKit/WKWebView.h"
+#import "WebKit/WKWebViewConfiguration.h"
+#import "WebKit/WKPreferences.h"
 
 typedef enum : NSUInteger {
     APPSCREEN_ORDERS = 1,
@@ -21,6 +24,9 @@ typedef enum : NSUInteger {
 {
     NSArray *_orders;
     OrdersManager *_ordersManager;
+
+    NSString *_callbackPhone;
+    void (^_callbackBlock)(BOOL);
 }
 
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *btnCreateOrder;
@@ -56,13 +62,6 @@ typedef enum : NSUInteger {
     _ordersManager = [OrdersManager new];
     _orders = [_ordersManager ordersList];
     [_tableView reloadData];
-}
-
--(void)showMessage:(NSString *)message withTitle:(NSString *)title
-{
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
-    [alert addAction:[UIAlertAction actionWithTitle:LOC(@"button.OK") style:UIAlertActionStyleDefault handler:nil]];
-    [self presentViewController:alert animated:YES completion:nil];
 }
 
 -(void)customizeItems
@@ -183,17 +182,115 @@ typedef enum : NSUInteger {
     UIViewController *vc = nil;
     switch ([item tag]) {
         case APPSCREEN_CONTACTS:
-            vc = [[[self navigationController] storyboard] instantiateViewControllerWithIdentifier:@"VCContacts"];
+            [self confirmCallbackRequest];
+            [tabBar setSelectedItem:[[tabBar items] firstObject]];
             break;
         case APPSCREEN_ABOUT:
             vc = [[[self navigationController] storyboard] instantiateViewControllerWithIdentifier:@"VCAbout"];
+            [self.navigationController pushViewController:vc animated:YES];
+            [tabBar setSelectedItem:[[tabBar items] firstObject]];
             break;
             
         default:
             break;
     }
-    [self.navigationController pushViewController:vc animated:YES];
-    [tabBar setSelectedItem:[[tabBar items] firstObject]];
+}
+
+-(void)confirmCallbackRequest
+{
+    // display alert view with text field to input phone for callback
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:LOC(@"title.CallbackRequest") message:LOC(@"text.ConfirmCallbackRequest") preferredStyle:UIAlertControllerStyleAlert];
+    [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+        [textField setKeyboardType:UIKeyboardTypePhonePad];
+        [textField setPlaceholder:LOC(@"placeholder.PhoneNumber")];
+    }];
+    
+    UIAlertAction *newAction = [UIAlertAction actionWithTitle:LOC(@"button.Cancel") style:UIAlertActionStyleCancel handler:nil];
+    [alert addAction:newAction];
+    
+    newAction = [UIAlertAction actionWithTitle:LOC(@"button.OK") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        NSString *phone = [[[alert textFields] firstObject] text];
+        if( [phone length] > 0 ) {
+            [self requestPhoneback:phone];
+        }
+    }];
+    
+    [alert addAction:newAction];
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
+#pragma mark -
+#pragma mark Callback request
+-(void)requestPhoneback:(NSSTring *)phone
+{
+    [self showActivity];
+    [self requestCallbackForPhone:phone callback:^(BOOL result)
+    {
+        SYNC_BLOCK_START
+            [self hideActivity];
+            if( result ) {
+                [self showMessage:LOC(@"message.CallbackWasRequested") withTitle:LOC(@"title.Success")];
+            }
+            else {
+                [self showError:LOC(@"message.ErrorSendingCallbackRequest")];
+            }
+        SYNC_BLOCK_END
+    }];
+}
+
+-(void)requestCallbackForPhone:(NSString *)phone callback:(void (^)(BOOL result))callback
+{
+    DLog(@"Sending call request for %@ to %@", phone, kURLCallback);
+    // request callback view ajax post form on the customer's web page.
+    WKWebViewConfiguration *conf = [[WKWebViewConfiguration alloc] init];
+    WKPreferences *prefs = [[WKPreferences alloc] init];
+    [prefs setJavaScriptEnabled:YES];
+    [prefs setJavaScriptCanOpenWindowsAutomatically:NO];
+    [conf setPreferences:prefs];
+    
+    _callbackBlock = callback;
+    
+    WKWebView *_webView = [[WKWebView alloc] initWithFrame:CGRectZero configuration:conf];
+    [_webView setNavigationDelegate:self];
+    [_webView setAllowsBackForwardNavigationGestures:NO];
+    [_webView setAllowsLinkPreview:NO];
+    [[self view] addSubview:_webView];
+    
+    _callbackPhone = phone;
+    [_webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:kURLCallback]]];
+}
+
+-(void)webView:(WKWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error
+{
+    NSLog(@"Navigation error appeared: %@", [error description]);
+    _callbackBlock(NO);
+    [webView removeFromSuperview];
+}
+
+-(void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation
+{
+    DLog(@"Page downloaded");
+    
+    NSString *js = [NSString stringWithFormat:@"document.getElementById('form_models_CallForm_telephone').value = '%@';", _callbackPhone];
+    
+    [webView evaluateJavaScript:js completionHandler:^(id _Nullable someID, NSError * _Nullable error) {
+        DLog(@"Phone numbers was set");
+        if( error ) {
+            NSLog(@"JS error appeared: %@", [error description]);
+        }
+    }];
+    
+    js = @"for(i=0;i<document.forms['call-widget-form'].elements.length;i++) {if( document.forms['call-widget-form'].elements.item(i).type == \"submit\" ) { document.forms['call-widget-form'].elements.item(i).clickOK(); } ;}";
+    [webView evaluateJavaScript:js completionHandler:^(id _Nullable someID, NSError * _Nullable error)
+    {
+        DLog(@"Submit was simulated");
+        
+        if( error ) {
+            NSLog(@"JS error appeared: %@", [error description]);
+        }
+        [webView removeFromSuperview];
+        _callbackBlock(nil == error);
+    }];
 }
 
 @end

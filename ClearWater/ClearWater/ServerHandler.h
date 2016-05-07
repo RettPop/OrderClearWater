@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "OrderModel.h"
+#import "WebKit/WKNavigationDelegate.h"
 
 @interface ServerHandler : NSObject<NSURLConnectionDelegate, NSURLSessionDelegate, NSURLSessionTaskDelegate, NSURLSessionDataDelegate>
 

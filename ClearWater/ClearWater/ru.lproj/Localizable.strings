@@ -20,6 +20,7 @@
 "placeholder.confirmPhone" = "Подтвердить по телефону";
 "placeholder.confirmEmail" = "Подтвердить по email";
 "placeholder.orderComments" = "Комментарий";
+"placeholder.PhoneNumber" = "Телефон";
 "error.NotAllFieldsFilled" = "Не все обязательные поля заполнены";
 "error.NotEnoughItemsOrdered" = "В заказе должно быть как минимум 2 бутыли воды";
 "error.DeliveryProhibitedInSunday" = "Доставка не работает в воскресенье";
@@ -37,6 +38,7 @@
 "title.Error" = "Ошибка";
 "button.OK" = "OK";
 "button.NO" = "НЕТ";
+"button.Cancel" = "Отмена";
 "button.YES" = "ДА";
 "button.Send" = "Отправка";
 "button.AddNew" = "Новый";
@@ -44,6 +46,7 @@
 "button.Delivered" = "Доставлено";
 "button.Confirm" = "Принято";
 "button.Back" = "Назад";
+"button.UseForNew" = "Как новый";
 
 "table.section.Client" = "Клиент";
 "table.section.Address" = "Адрес";
@@ -61,7 +64,12 @@
 "title.Order" = "Заказ";
 "title.NewOrder" = "Новый";
 "text.NoOrderAvailable" = "Заказов еще нет. Нажмите \"+\" чтобы создать новый.";
+"text.ConfirmCallbackRequest" = "Введите номер телефона для обратного звонка";
+"title.CallbackRequest" = "Обратный звонок";
 
 "title.Orders" = "Заказы";
 "title.Contacts" = "Контакты";
 "title.About" = "О приложении";
+
+"message.ErrorSendingCallbackRequest" = "При отправке запроса возникла ошибка. Попробуйте повторить позже.";
+"message.CallbackWasRequested" = "Запрос успешно отправлен. Мы вскоре перезвоним вам.";

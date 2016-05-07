@@ -20,22 +20,17 @@
 "placeholder.confirmPhone" = "Confirm by phone";
 "placeholder.confirmEmail" = "Confirm by email";
 "placeholder.orderComments" = "Comments";
+"placeholder.PhoneNumber" = "Phone";
 "error.NotAllFieldsFilled" = "Not all mandatory field were filled";
 "error.NotEnoughItemsOrdered" = "At least 2 bottles should be ordered";
 "error.DeliveryProhibitedInSunday" = "Delivery is not perfomed in Sunday";
 "cellText.ClearWater" = "Clear";
 "cellText.FluoridedWater" = "Fluorine";
 "cellText.IodinatedWater" = "Iodine";
-"cellText.SMS" = "SMS";
-"cellText.Phone" = "Phone";
-"cellText.Email" = "Email";
-"cellText.Code" = "Code";
-"cellText.FullName" = "Name";
-"cellText.Date" = "Date";
-"cellText.Period" = "Term";
 
 "title.Error" = "Error";
 "button.OK" = "OK";
+"button.Cancel" = "Cancel";
 "button.NO" = "NO";
 "button.YES" = "YES";
 "button.Send" = "Send";
@@ -44,6 +39,8 @@
 "button.Delivered" = "Delivered";
 "button.Confirm" = "Deal";
 "button.Back" = "Back";
+"button.UseForNew" = "As new";
+
 "cellText.SMS" = "SMS";
 "cellText.Phone" = "Phone";
 "cellText.Email" = "Email";
@@ -71,7 +68,12 @@
 "title.Order" = "Order";
 "title.NewOrder" = "New";
 "text.NoOrderAvailable" = "No orders yet. Tap \"+\" button to create new.";
+"text.ConfirmCallbackRequest" = "Enter number we can phone you";
+"title.CallbackRequest" = "Callback";
 
 "title.Orders" = "Orders";
 "title.Contacts" = "Contacts";
 "title.About" = "About";
+
+"message.ErrorSendingCallbackRequest" = "Some error appeared while requesting callback. Please try again later.";
+"message.CallbackWasRequested" = "Callback request was sent successfully. We will call you shortly.";

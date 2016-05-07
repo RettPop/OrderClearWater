@@ -20,7 +20,8 @@
 "placeholder.confirmPhone" = "Пiдтвердити за телефоном";
 "placeholder.confirmEmail" = "Пiдтвердити за email";
 "placeholder.orderComments" = "Комент";
-"error.NotAllFieldsFilled" = "Не всi обов'язковi поля заповнени";
+"placeholder.PhoneNumber" = "Телефон";
+"text.ConfirmCallbackRequest" = "Увведить номер телефону для зворотного дзвiнку";
 "error.NotEnoughItemsOrdered" = "В заказi повинно бути як найменьш 2 пляшки води";
 "error.DeliveryProhibitedInSunday" = "Доставка не працює у недiлю";
 "cellText.ClearWater" = "Чиста";
@@ -39,12 +40,14 @@
 "button.OK" = "OK";
 "button.NO" = "НI";
 "button.YES" = "ТАК";
+"button.Cancel" = "Вiдмiнити";
 "button.Send" = "Вiдправка";
 "button.AddNew" = "Новий";
 "button.SendOrder" = "Вiдiслати";
 "button.Delivered" = "Здiйснено";
 "button.Confirm" = "Прийнято";
 "button.Back" = "Назад";
+"button.UseForNew" = "Як новий";
 
 "table.section.Client" = "Клиент";
 "table.section.Address" = "Адреса";
@@ -63,7 +66,12 @@
 "title.Order" = "Замова";
 "title.NewOrder" = "Новий";
 "text.NoOrderAvailable" = "Замовлень ще нема. Натиснить \"+\" щоб створити нове.";
+"title.CallbackRequest" = "Зворотнiй дзвiнок";
+"error.NotAllFieldsFilled" = "Не всi обов'язковi поля заповнени";
 
 "title.Orders" = "Замовлення";
 "title.Contacts" = "Контакти";
 "title.About" = "Про додаток";
+
+"message.ErrorSendingCallbackRequest" = "Виникла помилка вiдправки запиту. Спробуйте трохи пiзнiше.";
+"message.CallbackWasRequested" = "Запит успiшно вiдправлено. Очикуйте на дзвiнок.";

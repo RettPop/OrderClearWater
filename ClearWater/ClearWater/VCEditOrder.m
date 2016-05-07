@@ -69,9 +69,6 @@ typedef enum : NSUInteger {
     NSArray *_deliveryTimes;
     NSArray *_deliveryDates;
 
-    UIActivityIndicatorView *_activity;
-    UIView *_activityBG;
-    UILabel *_activityText;
     NSDateFormatter *_dateFormatter;
     OrdersManager *_ordersManager;
 }
@@ -131,6 +128,11 @@ typedef enum : NSUInteger {
         [_btnSendOrder setHidden:YES];
         [_btnSendOrder changeFrameXDelta:.0f yDelta:CGRectGetHeight([_btnSendOrder bounds])];
         [_tableViewBottom setPriority:UILayoutPriorityRequired];
+        
+        // add navigation bar button to use existing order as new
+        [[self navigationItem] setRightBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:LOC(@"button.UseForNew") style:UIBarButtonItemStylePlain target:self action:@selector(restoreOrderTapped:)]];
+        [_tableViewBottom setPriority:UILayoutPriorityDefaultHigh];
+
     }
     else
     {
@@ -138,6 +140,7 @@ typedef enum : NSUInteger {
         _order = [[OrderModel alloc] init];
         [_btnSendOrder setHidden:NO];
         
+        // add navigation bar button to restore last order
         [[self navigationItem] setRightBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:LOC(@"button.RestoreOrder") style:UIBarButtonItemStylePlain target:self action:@selector(restoreOrderTapped:)]];
         [_tableViewBottom setPriority:UILayoutPriorityDefaultLow];
     }
@@ -159,9 +162,48 @@ typedef enum : NSUInteger {
                                                object:nil];
 }
 
+-(void)switchROMode:(BOOL)roMode //switch readonly mode
+{
+    _readonlyMode = roMode;
+    [_btnSendOrder setHidden:_readonlyMode];
+    if(_readonlyMode)
+    {
+        [_tableViewBottom setPriority:UILayoutPriorityDefaultHigh];
+
+        [[self navigationItem] setRightBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:LOC(@"button.UseForNew") style:UIBarButtonItemStylePlain target:self action:@selector(restoreOrderTapped:)]];
+    }
+    else
+    {
+        [_tableViewBottom setPriority:UILayoutPriorityDefaultLow];
+        [[self navigationItem] setRightBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:LOC(@"button.RestoreOrder") style:UIBarButtonItemStylePlain target:self action:@selector(restoreOrderTapped:)]];
+    }
+
+    for (NSUInteger idx = 0; idx < [_tableView numberOfSections]; idx++)
+    {
+        for (NSUInteger idy = 0; idy < [_tableView numberOfRowsInSection:idx]; idy++) {
+            UITableViewCell *onCell = [_tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:idy inSection:idx]];
+            [onCell setUserInteractionEnabled:NOT(_readonlyMode)];
+        }
+    }
+}
+
 -(void)restoreOrderTapped:(id)sender
 {
-    OrderModel* model = [self restoreOrder];
+    OrderModel* model = nil;
+    
+    // if we are in readonly mode, it meanth that we are displaying existing order.
+    // In this case we can use it as a base for new order. Only need to clead delivery date
+    if( _readonlyMode )
+    {
+        model = [[OrderModel alloc] initWithOrder:_order];
+        [model setScheduleDate:nil];
+        [self switchROMode:NO];
+        
+    }
+    else {
+        model = [self restoreOrder];
+    }
+    
     if( model ) {
         [self fillUIFromOrder:model];
         _order = model;
@@ -324,15 +366,14 @@ typedef enum : NSUInteger {
     {
         [order markSent];
         [_ordersManager addNewOrder:order];
-        [self showMessage:LOC(@"message.OrderWasSent") withTitle:LOC(@"title.Success")];
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:LOC(@"title.Success")
                                                                        message:LOC(@"message.OrderWasSent")
                                                                 preferredStyle:UIAlertControllerStyleAlert];
-        [alert addAction:[UIAlertAction actionWithTitle:LOC(@"button.OK") style:UIAlertActionStyleDefault handler:nil]];
-        [self presentViewController:alert animated:YES completion:^{
+        [alert addAction:[UIAlertAction actionWithTitle:LOC(@"button.OK") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             [[self navigationController] popViewControllerAnimated:YES];
-        }];
-
+        }]];
+        
+        [self presentViewController:alert animated:YES completion:nil];
     }
     else
     {
@@ -588,9 +629,6 @@ typedef enum : NSUInteger {
         [separator alignVerticalsWithMasterView:[cell contentView]];
         [[cell detailTextLabel] setFont:[UIFont systemFontOfSize:13.f]];
         
-        //if user can edit order
-        [cell setUserInteractionEnabled:NOT(_readonlyMode)];
-        
         switch (indexPath.section)
         {
             case SECTION_CLIENT:
@@ -781,6 +819,10 @@ typedef enum : NSUInteger {
         [separator alignBottomsWithMasterView:[separator superview]];
     }
     
+    //if user can edit order
+    [cell setUserInteractionEnabled:NOT(_readonlyMode)];
+
+    
     return  cell;
 }
 
@@ -967,19 +1009,6 @@ typedef enum : NSUInteger {
     }
 }
 
-#pragma mark -
-#pragma mark Helpers
--(void)showError:(NSString *)message
-{
-    [self showMessage:message withTitle:LOC(@"title.Error")];
-}
-
--(void)showMessage:(NSString *)message withTitle:(NSString *)title
-{
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
-    [alert addAction:[UIAlertAction actionWithTitle:LOC(@"button.OK") style:UIAlertActionStyleDefault handler:nil]];
-    [self presentViewController:alert animated:YES completion:nil];
-}
 
 #pragma mark -
 #pragma mark UIPickerView
@@ -1025,69 +1054,5 @@ typedef enum : NSUInteger {
         [_order setScheduleTime:[_deliveryTimes objectAtIndex:row]];
     }
 }
-
-#pragma mark -
-#pragma mark Activity indicator issues
-
--(void)showActivity
-{
-    DLog(@"");
-    if( _activity ) {
-        [self hideActivity];
-    }
-    dispatch_async(dispatch_get_main_queue(), ^(void){
-        _activity = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
-        [_activity setCenter:self.view.center];
-        [_activity startAnimating];
-        
-        _activityBG = [[UIView alloc] initWithFrame:[[self view] bounds]];
-        [_activityBG setCenter:[[self view] center]];
-        [_activityBG setBackgroundColor:[UIColor blackColor]];
-        [_activityBG setAlpha:.7f];
-        
-        [[[UIApplication sharedApplication] keyWindow] addSubview:_activityBG];
-        [[[UIApplication sharedApplication] keyWindow] addSubview:_activity];
-        [[[UIApplication sharedApplication] keyWindow] bringSubviewToFront:_activityBG];
-        [[[UIApplication sharedApplication] keyWindow] bringSubviewToFront:_activity];
-        
-        _activityText = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(_activityBG.bounds), 20.f)];
-        [_activityText setText:@""];
-        [_activityText setFont:[UIFont systemFontOfSize:15.f]];
-        [_activityText setTextColor:[UIColor whiteColor]];
-        [_activityText setTextAlignment:NSTextAlignmentCenter];
-        [[[UIApplication sharedApplication] keyWindow]  addSubview:_activityText];
-        [[[UIApplication sharedApplication] keyWindow] bringSubviewToFront:_activityText];
-        [_activityText setCenter:[_activityBG center]];
-        [_activityText setFrame:CGRectOffset(_activityText.frame, 0.f, 30.f)];
-        [[self navigationItem] setHidesBackButton:YES animated:YES];
-        [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
-    });
-}
-
--(void)changeActivityText:(NSString *)newText
-{
-    dispatch_async(dispatch_get_main_queue(), ^(void){
-        [_activityText setText:newText];
-    });
-}
-
--(void)hideActivity
-{
-    DLog(@"");
-    dispatch_async(dispatch_get_main_queue(), ^(void){
-        if( _activityBG )
-        {
-            [_activityText removeFromSuperview];
-            _activityText = nil;
-            [_activityBG removeFromSuperview];
-            _activityBG = nil;
-            [_activity removeFromSuperview];
-            _activity = nil;
-            [[self navigationItem] setHidesBackButton:NO animated:YES];
-            [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
-        }
-    });
-}
-
 
 @end

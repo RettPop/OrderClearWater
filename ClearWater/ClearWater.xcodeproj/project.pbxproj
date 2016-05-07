@@ -34,6 +34,8 @@
 		7B5BA8F51CC19A4D008B948C /* Icon-Small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7B5BA8EA1CC19A4D008B948C /* Icon-Small@2x.png */; };
 		7B5BA8F61CC19A4D008B948C /* Icon-Small@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7B5BA8EB1CC19A4D008B948C /* Icon-Small@3x.png */; };
 		7BB2689F1CBFA6A20085EEC3 /* OrdersManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BB2689E1CBFA6A20085EEC3 /* OrdersManager.m */; };
+		7BDD6F311CDE505900DA157B /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BDD6F301CDE505900DA157B /* WebKit.framework */; };
+		7BDD6F371CDE596800DA157B /* VCBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDD6F361CDE596800DA157B /* VCBase.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -79,6 +81,9 @@
 		7B5BA8EB1CC19A4D008B948C /* Icon-Small@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-Small@3x.png"; path = "Assets.xcassets/AppIcon.appiconset/Icon-Small@3x.png"; sourceTree = "<group>"; };
 		7BB2689D1CBFA6A20085EEC3 /* OrdersManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OrdersManager.h; sourceTree = "<group>"; };
 		7BB2689E1CBFA6A20085EEC3 /* OrdersManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OrdersManager.m; sourceTree = "<group>"; };
+		7BDD6F301CDE505900DA157B /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		7BDD6F351CDE596800DA157B /* VCBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VCBase.h; sourceTree = "<group>"; };
+		7BDD6F361CDE596800DA157B /* VCBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VCBase.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,6 +91,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7BDD6F311CDE505900DA157B /* WebKit.framework in Frameworks */,
 				7B38987D1CBB19880062ECE1 /* Crashlytics.framework in Frameworks */,
 				7B38987C1CBB19880062ECE1 /* Fabric.framework in Frameworks */,
 			);
@@ -97,6 +103,7 @@
 		7B558D601CB695F8007B0776 = {
 			isa = PBXGroup;
 			children = (
+				7BDD6F301CDE505900DA157B /* WebKit.framework */,
 				7B558D6B1CB695F9007B0776 /* ClearWater */,
 				7B558D6A1CB695F9007B0776 /* Products */,
 				7B38987A1CBB19880062ECE1 /* Fabric.framework */,
@@ -140,6 +147,8 @@
 				7B558D981CBA85F4007B0776 /* CWAddress.m */,
 				7BB2689D1CBFA6A20085EEC3 /* OrdersManager.h */,
 				7BB2689E1CBFA6A20085EEC3 /* OrdersManager.m */,
+				7BDD6F351CDE596800DA157B /* VCBase.h */,
+				7BDD6F361CDE596800DA157B /* VCBase.m */,
 			);
 			path = ClearWater;
 			sourceTree = "<group>";
@@ -280,6 +289,7 @@
 				7B558D6E1CB695FA007B0776 /* main.m in Sources */,
 				7B558D911CB6F1CE007B0776 /* UIView+SSUIViewCategory.m in Sources */,
 				7B558D8B1CB6AAEC007B0776 /* VCEditOrder.m in Sources */,
+				7BDD6F371CDE596800DA157B /* VCBase.m in Sources */,
 				7BB2689F1CBFA6A20085EEC3 /* OrdersManager.m in Sources */,
 				7B558D9C1CBA8852007B0776 /* CWSchedule.m in Sources */,
 				7B558D941CB7BC51007B0776 /* ServerHandler.m in Sources */,

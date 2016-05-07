@@ -8,9 +8,6 @@
 
 #import "ServerHandler.h"
 
-#define SERVER_URL @"http://www.clearwater.ua/order/_system/jsorder.php"
-//#define SERVER_URL @"https://requestb.in/p9vw66p9"
-
 @implementation ServerHandler
 
 +(instancetype)sharedInstance
@@ -26,9 +23,11 @@
 
 -(BOOL)sendOrder:(OrderModel *)order
 {
+    return YES;
+    
     NSString *orderAsParams = [self POSTParamsToString:[order valuesDict]];
     NSMutableURLRequest *uploadReq = [self prepReqestWithParams:orderAsParams];
-    [uploadReq setURL:[NSURL URLWithString:SERVER_URL]];
+    [uploadReq setURL:[NSURL URLWithString:kURLNewOrder]];
     
     NSMutableData *respData = [[NSMutableData alloc] init];
     NSHTTPURLResponse *resp = [self sendRequest:uploadReq dataStorage:respData];
@@ -70,13 +69,12 @@
 -(NSData *)sendSynchronousRequest:(NSURLRequest *)request
                           session:(NSURLSession *)session
                  returningResponse:(__autoreleasing NSURLResponse **)responsePtr
-                             error:(__autoreleasing NSError **)errorPtr {
-    dispatch_semaphore_t    sem;
-    __block NSData *        result;
-    
-    result = nil;
-    
-    sem = dispatch_semaphore_create(0);
+                             error:(__autoreleasing NSError **)errorPtr
+{
+
+    // make ansyncronous actions synchronously
+    __block NSData *result = nil;
+    dispatch_semaphore_t sem = dispatch_semaphore_create(0);
     
     [[session dataTaskWithRequest:request
                 completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
@@ -144,7 +142,7 @@ completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredentia
 
 -(NSMutableURLRequest *)prepReqestWithParams:(NSString *)withParams
 {
-    NSString *serviceURL = SERVER_URL;
+    NSString *serviceURL = kURLNewOrder;
     NSMutableURLRequest *newReq = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:serviceURL]
                                                           cachePolicy:NSURLRequestReloadIgnoringLocalCacheData
                                                       timeoutInterval:60];
@@ -168,5 +166,6 @@ completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredentia
     
     return strParams;
 }
+
 
 @end

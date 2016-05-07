@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "OrderModel.h"
+#import "VCBase.h"
 
-@interface VCEditOrder : UIViewController<UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource>
+@interface VCEditOrder : VCBase<UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource>
 
 -(void)displayOrder:(OrderModel *)order;
 

@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "VCBase.h"
+#import "WebKit/WKNavigationDelegate.h"
 
-@interface OrdersList : UIViewController<UITableViewDelegate, UITableViewDataSource, UITabBarDelegate>
+
+@interface OrdersList : VCBase<UITableViewDelegate, UITableViewDataSource, UITabBarDelegate, WKNavigationDelegate>
 
 @end

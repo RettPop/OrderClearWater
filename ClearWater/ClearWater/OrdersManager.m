@@ -30,11 +30,11 @@
     return self;
 }
 
--(OrderModel *)lastOrder
+-(OrderModel *)lastOrder // last in time but not in order
 {
     OrderModel *newOrder = nil;
-    if( [_orders lastObject] ) {
-        newOrder = [[OrderModel alloc] initWithOrder:[_orders lastObject]];
+    if( [_orders firstObject] ) {
+        newOrder = [[OrderModel alloc] initWithOrder:[_orders firstObject]];
     }
     return newOrder;
 }
@@ -62,7 +62,8 @@
 
 -(void)addNewOrder:(OrderModel *)newOrder
 {
-    [_orders addObject:newOrder];
+    // store orders in reverse order. Orders in order. LOL
+    [_orders insertObject:newOrder atIndex:0];
     [self storeOrders:_orders];
 }
 
