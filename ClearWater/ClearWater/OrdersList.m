@@ -280,7 +280,7 @@ typedef enum : NSUInteger {
         }
     }];
     
-    js = @"for(i=0;i<document.forms['call-widget-form'].elements.length;i++) {if( document.forms['call-widget-form'].elements.item(i).type == \"submit\" ) { document.forms['call-widget-form'].elements.item(i).clickOK(); } ;}";
+    js = @"for(i=0;i<document.forms['call-widget-form'].elements.length;i++) {if( document.forms['call-widget-form'].elements.item(i).type == \"submit\" ) { document.forms['call-widget-form'].elements.item(i).click(); } ;}";
     [webView evaluateJavaScript:js completionHandler:^(id _Nullable someID, NSError * _Nullable error)
     {
         DLog(@"Submit was simulated");

@@ -39,7 +39,7 @@
 "button.Delivered" = "Delivered";
 "button.Confirm" = "Deal";
 "button.Back" = "Back";
-"button.UseForNew" = "As new";
+"button.UseForNew" = "Use for new";
 
 "cellText.SMS" = "SMS";
 "cellText.Phone" = "Phone";
