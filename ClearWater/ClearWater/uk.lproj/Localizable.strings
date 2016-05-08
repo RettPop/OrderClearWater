@@ -72,6 +72,21 @@
 "title.Orders" = "Замовлення";
 "title.Contacts" = "Контакти";
 "title.About" = "Про додаток";
+"title.Home" = "Додому";
+"title.Callback" = "Передзвонiть";
+"title.Delivered" = "Доставлено";
+"title.Confirmed" = "Пiдтверджено";
+"title.NotDelivered" = "Не доставлено";
+"title.NotConfirmed" = "Не пiдтверджено";
+
+"title.RemoveConfirmation" = "Пiдтвердження замовлення";
+"text.RemoveConfirmation" = "Вiдмiтити замовлення як не затверджене?";
+"title.OrderConfirmation" = "Пiдтвердження замовлення";
+"text.SetOrderConfirmation" = "Вiдмiтити замовлення як затверджене?";
+"title.OrderDelivery" = "Доставка замовлення";
+"text.SetOrderDelivery" = "Вiдмiтити замовлення як доставлене?";
+"title.RemoveDelivery" = "Доставка замовлення";
+"text.RemoveDelivery" = "Вiдмiтити замовлення як не доставлене? Це не вплине на наявнiсть вже доставлених пляшок, але... Дiйсно?";
 
 "message.ErrorSendingCallbackRequest" = "Виникла помилка вiдправки запиту. Спробуйте трохи пiзнiше.";
 "message.CallbackWasRequested" = "Запит успiшно вiдправлено. Очикуйте на дзвiнок.";

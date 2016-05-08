@@ -70,10 +70,25 @@
 "text.NoOrderAvailable" = "No orders yet. Tap \"+\" button to create new.";
 "text.ConfirmCallbackRequest" = "Enter number we can phone you";
 "title.CallbackRequest" = "Callback";
+"title.Delivered" = "Delivered";
+"title.Confirmed" = "Confirmed";
+"title.NotDelivered" = "Not delivered";
+"title.NotConfirmed" = "Not confirmed";
+
+"title.RemoveConfirmation" = "Order confirmation";
+"text.RemoveConfirmation" = "Are you sure you want to mark the order as not confirmed?";
+"title.OrderConfirmation" = "Order confirmation";
+"text.SetOrderConfirmation" = "Mark the order as confirmed?";
+"title.OrderDelivery" = "Order delivery";
+"text.SetOrderDelivery" = "Mark the order as delivered?";
+"title.RemoveDelivery" = "Order delivery";
+"text.RemoveDelivery" = "Are you sure you want to mark the order as not delivered? It won't affect your physical buttles, but anyway. Do you?";
 
 "title.Orders" = "Orders";
 "title.Contacts" = "Contacts";
 "title.About" = "About";
+"title.Home" = "Home";
+"title.Callback" = "Call me back";
 
 "message.ErrorSendingCallbackRequest" = "Some error appeared while requesting callback. Please try again later.";
 "message.CallbackWasRequested" = "Callback request was sent successfully. We will call you shortly.";

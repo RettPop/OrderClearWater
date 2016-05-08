@@ -16,8 +16,8 @@
 
 typedef enum : NSUInteger {
     APPSCREEN_ORDERS = 1,
+    APPSCREEN_CALLBACK,
     APPSCREEN_ABOUT,
-    APPSCREEN_CONTACTS,
 } APPSCREEN;
 
 @interface OrdersList ()
@@ -66,8 +66,8 @@ typedef enum : NSUInteger {
 
 -(void)customizeItems
 {
-    [_baritmOrders setTitle:LOC(@"title.Orders")];
-    [_baritmContacts setTitle:LOC(@"title.Contacts")];
+    [_baritmOrders setTitle:LOC(@"title.Home")];
+    [_baritmContacts setTitle:LOC(@"title.Callback")];
     [_baritmAbout setTitle:LOC(@"title.About")];
 }
 
@@ -181,7 +181,7 @@ typedef enum : NSUInteger {
 {
     UIViewController *vc = nil;
     switch ([item tag]) {
-        case APPSCREEN_CONTACTS:
+        case APPSCREEN_CALLBACK:
             [self confirmCallbackRequest];
             [tabBar setSelectedItem:[[tabBar items] firstObject]];
             break;

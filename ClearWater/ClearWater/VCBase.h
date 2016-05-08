@@ -20,5 +20,8 @@
 -(void)hideActivity;
 -(void)showError:(NSString *)message;
 -(void)showMessage:(NSString *)message withTitle:(NSString *)title;
+-(void)showMessage:(NSString *)message withTitle:(NSString *)title withCallback:(void (^ __nullable)(void))callback;
+-(void)showError:(NSString *)message withCallback:(void (^ __nullable)(void))callback;
+-(void)customizeItems;
 
 @end

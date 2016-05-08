@@ -67,6 +67,26 @@
     [self storeOrders:_orders];
 }
 
+-(void)updateOrder:(OrderModel *)order
+{
+    OrderModel *orderToUpdate = nil;
+    for (OrderModel *oneOrder in _orders) {
+        if( [[order orderID] isEqualToString:[oneOrder orderID]] )
+        {
+            orderToUpdate = oneOrder;
+            break;
+        }
+    }
+    
+    if( orderToUpdate )
+    {
+        NSUInteger idx = [_orders indexOfObject:orderToUpdate];
+        [_orders removeObject:orderToUpdate];
+        [_orders insertObject:order atIndex:idx];
+        [self storeOrders:_orders];
+    }
+}
+
 -(void)storeOrders:(NSArray *)orders
 {
     NSUserDefaults *def = [NSUserDefaults standardUserDefaults];

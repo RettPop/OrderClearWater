@@ -12,6 +12,7 @@
 
 - (void)encodeWithCoder:(NSCoder *)aCoder
 {
+    encObj(_orderID);
     encObj(_clientCode);
     encObj(_addressCity);
     encObj(_addressStreet);
@@ -39,6 +40,12 @@
     self = [super init];
     if( self )
     {
+        decObj(_orderID);
+        // backward compatibility
+        if( !_orderID || [_orderID length] == 0 )
+        {
+            _orderID = [[NSUUID UUID] UUIDString];
+        }
         decObj(_clientCode);
         decObj(_addressCity);
         decObj(_addressStreet);
@@ -70,6 +77,7 @@
     self = [super init];
     if( self )
     {
+        _orderID = [[NSUUID UUID] UUIDString];
         _clientCode = @"";
         _addressCity = @"";
         _addressStreet = @"";
@@ -97,7 +105,7 @@
 
 -(id)initWithOrder:(OrderModel *)order
 {
-    self = [super init];
+    self = [self init];
     if( self )
     {
         _clientCode = [order clientCode];
@@ -192,6 +200,16 @@
 -(void)markDelivered
 {
     _delivered = YES;
+}
+
+-(void)markNotConfirmed
+{
+    _dateConfirmed = nil;
+}
+
+-(void)markNotDelivered
+{
+    _delivered = NO;
 }
 
 

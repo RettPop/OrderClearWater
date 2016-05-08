@@ -18,7 +18,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="kj9-mj-QXl">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="623"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="620"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <sections/>
                                 <connections>
@@ -27,10 +27,10 @@
                                 </connections>
                             </tableView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FPZ-qF-gwV">
-                                <rect key="frame" x="0.0" y="622" width="375" height="45"/>
+                                <rect key="frame" x="0.0" y="618" width="375" height="49"/>
                                 <color key="backgroundColor" cyan="0.4910048246" magenta="0.094819761409999995" yellow="0.0" black="0.0" alpha="1" colorSpace="custom" customColorSpace="genericCMYKColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" priority="750" constant="45" id="Wh4-JB-3aO"/>
+                                    <constraint firstAttribute="height" priority="750" constant="49" id="Wh4-JB-3aO"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" title="Send order">
@@ -40,17 +40,32 @@
                                     <action selector="sendOrderTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="dxJ-bp-l9z"/>
                                 </connections>
                             </button>
+                            <tabBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="y92-dr-vhv">
+                                <rect key="frame" x="0.0" y="618" width="375" height="49"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <items>
+                                    <tabBarItem title="Confirmed" image="notconfirmed.png" id="b08-yV-Zc5"/>
+                                    <tabBarItem title="Delivered" image="notdelivered.png" id="dB4-sz-5vW"/>
+                                </items>
+                                <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="dch-pf-VUA"/>
+                                </connections>
+                            </tabBar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="FPZ-qF-gwV" firstAttribute="top" secondItem="kj9-mj-QXl" secondAttribute="bottom" priority="750" constant="-1" id="1WF-Mt-Uzj"/>
+                            <constraint firstItem="FPZ-qF-gwV" firstAttribute="top" secondItem="kj9-mj-QXl" secondAttribute="bottom" priority="750" constant="-2" id="1WF-Mt-Uzj"/>
                             <constraint firstItem="kj9-mj-QXl" firstAttribute="trailing" secondItem="FPZ-qF-gwV" secondAttribute="trailing" id="25w-if-G7d"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="y92-dr-vhv" secondAttribute="bottom" id="3dc-ZN-5KG"/>
                             <constraint firstItem="kj9-mj-QXl" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="5sk-x5-8Oe"/>
                             <constraint firstItem="kj9-mj-QXl" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="-64" id="EiK-HM-zRD"/>
                             <constraint firstItem="kj9-mj-QXl" firstAttribute="leading" secondItem="FPZ-qF-gwV" secondAttribute="leading" id="K4Z-av-e29"/>
+                            <constraint firstItem="y92-dr-vhv" firstAttribute="trailing" secondItem="FPZ-qF-gwV" secondAttribute="trailing" id="XNZ-ya-yKW"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="FPZ-qF-gwV" secondAttribute="bottom" id="fe7-AP-KMw"/>
-                            <constraint firstItem="kj9-mj-QXl" firstAttribute="bottom" secondItem="FPZ-qF-gwV" secondAttribute="bottom" priority="250" constant="-44" id="pde-4W-Kpy"/>
+                            <constraint firstItem="kj9-mj-QXl" firstAttribute="bottom" secondItem="FPZ-qF-gwV" secondAttribute="bottom" priority="250" constant="-47" id="pde-4W-Kpy"/>
                             <constraint firstAttribute="trailing" secondItem="kj9-mj-QXl" secondAttribute="trailing" id="xRL-YJ-cFd"/>
+                            <constraint firstItem="y92-dr-vhv" firstAttribute="leading" secondItem="FPZ-qF-gwV" secondAttribute="leading" id="xhh-yZ-SWL"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="mxL-gm-brG" userLabel="I"/>
@@ -58,6 +73,9 @@
                     <connections>
                         <outlet property="btnSendOrder" destination="FPZ-qF-gwV" id="YCX-5g-IRo"/>
                         <outlet property="constrSendButtonHeight" destination="1WF-Mt-Uzj" id="tgz-0G-NFS"/>
+                        <outlet property="tabbar" destination="y92-dr-vhv" id="HIZ-g0-G0f"/>
+                        <outlet property="tabitmConfirmed" destination="b08-yV-Zc5" id="cu7-VD-S7d"/>
+                        <outlet property="tabitmDelivered" destination="dB4-sz-5vW" id="56B-84-gVX"/>
                         <outlet property="tableView" destination="kj9-mj-QXl" id="gJs-hG-htN"/>
                         <outlet property="tableViewBottom" destination="pde-4W-Kpy" id="qJG-CR-9iC"/>
                     </connections>
@@ -90,9 +108,9 @@
                                 <rect key="frame" x="0.0" y="618" width="375" height="49"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <items>
-                                    <tabBarItem tag="1" systemItem="history" id="99K-mf-J92"/>
-                                    <tabBarItem tag="2" systemItem="more" id="hVR-Na-vBg"/>
-                                    <tabBarItem tag="3" systemItem="contacts" id="vHK-QU-V4Q"/>
+                                    <tabBarItem tag="1" title="Home" image="home.png" selectedImage="home.png" id="99K-mf-J92"/>
+                                    <tabBarItem tag="2" title="Callback" image="calback.png" id="vHK-QU-V4Q"/>
+                                    <tabBarItem tag="3" title="About" image="about.png" id="hVR-Na-vBg"/>
                                 </items>
                                 <connections>
                                     <outlet property="delegate" destination="cy5-GR-uRe" id="Xhg-K2-L3m"/>
@@ -188,4 +206,11 @@
             <point key="canvasLocation" x="614.5" y="332.5"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="about.png" width="25" height="25"/>
+        <image name="calback.png" width="25" height="25"/>
+        <image name="home.png" width="25" height="25"/>
+        <image name="notconfirmed.png" width="25" height="25"/>
+        <image name="notdelivered.png" width="25" height="25"/>
+    </resources>
 </document>

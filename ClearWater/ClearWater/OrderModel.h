@@ -21,8 +21,11 @@
 -(void)markSent;
 -(void)markConfirmed;
 -(void)markDelivered;
+-(void)markNotConfirmed;
+-(void)markNotDelivered;
 -(id)initWithOrder:(OrderModel *)order;
 
+@property (strong, nonatomic, readonly) NSString *orderID;
 @property (strong, nonatomic) NSString *clientCode;
 @property (strong, nonatomic) NSString *addressCity;
 @property (strong, nonatomic) NSString *addressStreet;
@@ -42,6 +45,6 @@
 @property (strong, nonatomic, readonly) NSDate   *dateSent;
 @property (strong, nonatomic, readonly) NSDate   *dateCreated;
 @property (strong, nonatomic, readonly) NSDate   *dateConfirmed;
-@property (nonatomic, assign, readonly)     BOOL delivered;
+@property (nonatomic, assign, readonly) BOOL delivered;
 
 @end

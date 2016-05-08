@@ -13,6 +13,16 @@
 #pragma mark -
 #pragma mark Activity indicator issues
 
+- (void)viewDidLoad
+{
+    [self customizeItems];
+}
+
+-(void)customizeItems
+{
+    // stub
+}
+
 -(void)showActivity
 {
     DLog(@"");

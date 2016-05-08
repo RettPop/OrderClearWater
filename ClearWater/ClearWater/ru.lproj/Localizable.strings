@@ -70,6 +70,21 @@
 "title.Orders" = "Заказы";
 "title.Contacts" = "Контакты";
 "title.About" = "О приложении";
+"title.Home" = "Домой";
+"title.Callback" = "Перезвоните";
+"title.Delivered" = "Доставлено";
+"title.Confirmed" = "Подтверджено";
+"title.NotDelivered" = "Не доставлено";
+"title.NotConfirmed" = "Не подтверджено";
+
+"title.RemoveConfirmation" = "Подтверждение заказа";
+"text.RemoveConfirmation" = "Пометить заказ как не подтвержденный?";
+"title.OrderConfirmation" = "Подтверждение заказа";
+"text.SetOrderConfirmation" = "Пометить заказ как подтвержденный?";
+"title.OrderDelivery" = "Доставка заказа";
+"text.SetOrderDelivery" = "Пометить заказ как доставленный?";
+"title.RemoveDelivery" = "Доставка заказа";
+"text.RemoveDelivery" = "Вы хотите отметить заказ как не доставленный? Это не повлияет на наличие уже доставленных бутылей, но все же. Точно?";
 
 "message.ErrorSendingCallbackRequest" = "При отправке запроса возникла ошибка. Попробуйте повторить позже.";
 "message.CallbackWasRequested" = "Запрос успешно отправлен. Мы вскоре перезвоним вам.";

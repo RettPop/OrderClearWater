@@ -104,6 +104,11 @@ typedef enum : NSUInteger {
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *tableViewBottom;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *constrSendButtonHeight;
 
+
+@property (strong, nonatomic) IBOutlet UITabBar *tabbar;
+@property (strong, nonatomic) IBOutlet UITabBarItem *tabitmConfirmed;
+@property (strong, nonatomic) IBOutlet UITabBarItem *tabitmDelivered;
+
 @end
 
 //----------------------------------------------------------------------
@@ -117,32 +122,13 @@ typedef enum : NSUInteger {
     
     [self initFields];
     _ordersManager = [OrdersManager new];
-    [_btnSendOrder setTitle:LOC(@"button.SendOrder") forState:UIControlStateNormal];
+    [self updateToolbar];
     
-    if( _readonlyMode )
-    {
-        [[self navigationItem] setTitle:LOC(@"title.Order")];
+    if( _readonlyMode ) {
         [self fillUIFromOrder:_order];
-        
-        // stretch table view to the bottom of screen
-        [_btnSendOrder setHidden:YES];
-        [_btnSendOrder changeFrameXDelta:.0f yDelta:CGRectGetHeight([_btnSendOrder bounds])];
-        [_tableViewBottom setPriority:UILayoutPriorityRequired];
-        
-        // add navigation bar button to use existing order as new
-        [[self navigationItem] setRightBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:LOC(@"button.UseForNew") style:UIBarButtonItemStylePlain target:self action:@selector(restoreOrderTapped:)]];
-        [_tableViewBottom setPriority:UILayoutPriorityDefaultHigh];
-
     }
-    else
-    {
-        [[self navigationItem] setTitle:LOC(@"title.NewOrder")];
+    else {
         _order = [[OrderModel alloc] init];
-        [_btnSendOrder setHidden:NO];
-        
-        // add navigation bar button to restore last order
-        [[self navigationItem] setRightBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:LOC(@"button.RestoreOrder") style:UIBarButtonItemStylePlain target:self action:@selector(restoreOrderTapped:)]];
-        [_tableViewBottom setPriority:UILayoutPriorityDefaultLow];
     }
 
     // handle keyboard appearance to change UI layout
@@ -162,10 +148,72 @@ typedef enum : NSUInteger {
                                                object:nil];
 }
 
+-(void)updateToolbar
+{
+    if( !_order || ![_order dateConfirmed] )
+    {
+        [_tabitmConfirmed setTitle:LOC(@"title.NotConfirmed")];
+        [_tabitmConfirmed setImage:[UIImage imageNamed:@"notconfirmed"]];
+        [_tabitmConfirmed setSelectedImage:[UIImage imageNamed:@"notconfirmed"]];
+    }
+    else
+    {
+        [_tabitmConfirmed setTitle:LOC(@"title.Confirmed")];
+        [_tabitmConfirmed setImage:[UIImage imageNamed:@"confirmed"]];
+        [_tabitmConfirmed setSelectedImage:[UIImage imageNamed:@"confirmed"]];
+    }
+
+    if( !_order || ![_order delivered] )
+    {
+        [_tabitmDelivered setTitle:LOC(@"title.NotDelivered")];
+        [_tabitmDelivered setImage:[UIImage imageNamed:@"notdelivered"]];
+        [_tabitmDelivered setSelectedImage:[UIImage imageNamed:@"notdelivered"]];
+    }
+    else
+    {
+        [_tabitmDelivered setTitle:LOC(@"title.Delivered")];
+        [_tabitmDelivered setImage:[UIImage imageNamed:@"delivered"]];
+        [_tabitmDelivered setSelectedImage:[UIImage imageNamed:@"delivered"]];
+    }
+}
+
+-(void)customizeItems
+{
+
+    [_tabbar setHidden:!_readonlyMode];
+    [_btnSendOrder setTitle:LOC(@"button.SendOrder") forState:UIControlStateNormal];
+
+    if( _readonlyMode )
+    {
+        [[self navigationItem] setTitle:LOC(@"title.Order")];
+        
+        // stretch table view to the bottom of screen
+        [_btnSendOrder setHidden:YES];
+        [_btnSendOrder changeFrameXDelta:.0f yDelta:CGRectGetHeight([_btnSendOrder bounds])];
+        [_tableViewBottom setPriority:UILayoutPriorityRequired];
+        
+        // add navigation bar button to use existing order as new
+        [[self navigationItem] setRightBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:LOC(@"button.UseForNew") style:UIBarButtonItemStylePlain target:self action:@selector(restoreOrderTapped:)]];
+        [_tableViewBottom setPriority:UILayoutPriorityDefaultHigh];
+        
+    }
+    else
+    {
+        [[self navigationItem] setTitle:LOC(@"title.NewOrder")];
+        [_btnSendOrder setHidden:NO];
+        
+        // add navigation bar button to restore last order
+        [[self navigationItem] setRightBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:LOC(@"button.RestoreOrder") style:UIBarButtonItemStylePlain target:self action:@selector(restoreOrderTapped:)]];
+        [_tableViewBottom setPriority:UILayoutPriorityDefaultLow];
+    }
+
+}
+
 -(void)switchROMode:(BOOL)roMode //switch readonly mode
 {
     _readonlyMode = roMode;
     [_btnSendOrder setHidden:_readonlyMode];
+    [_tabbar setHidden:!_readonlyMode];
     if(_readonlyMode)
     {
         [_tableViewBottom setPriority:UILayoutPriorityDefaultHigh];
@@ -441,6 +489,8 @@ typedef enum : NSUInteger {
     [_contentClearWater setText: [[order contentClearWater] stringValue]];
     [_contentFluoride setText: [[order contentFluorided] stringValue]];
     [_contentIodinated setText: [[order contentIodinated] stringValue]];
+
+    [self updateToolbar];
 }
 
 -(BOOL)checkFields
@@ -987,7 +1037,7 @@ typedef enum : NSUInteger {
     CGFloat bottomHeight = CGRectGetHeight([[UIScreen mainScreen] bounds]) - CGRectGetMaxY([[self btnSendOrder] frame]);
     
     CGFloat kbHeight = kbSize.height;
-    _viewShiftDelta = kbHeight - bottomHeight + [UIApplication sharedApplication].statusBarFrame.size.height;
+    _viewShiftDelta = kbHeight - bottomHeight;// + [UIApplication sharedApplication].statusBarFrame.size.height;
     // if keyboard is higher than Login button bottom line shift UI to this delta
     if( _viewShiftDelta > 0 ) {
         [UIView animateWithDuration:.2f animations:^{
@@ -1054,5 +1104,78 @@ typedef enum : NSUInteger {
         [_order setScheduleTime:[_deliveryTimes objectAtIndex:row]];
     }
 }
+
+-(void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item
+{
+    if( _tabitmConfirmed == item )
+    {
+        if( [_order dateConfirmed] )
+        {
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:LOC(@"title.RemoveConfirmation") message:LOC(@"text.RemoveConfirmation") preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *oneAct = [UIAlertAction actionWithTitle:LOC(@"button.YES") style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+                [_order markNotConfirmed];
+                [_ordersManager updateOrder:_order];
+                [self updateToolbar];
+            }];
+            [alert addAction:oneAct];
+            
+            oneAct = [UIAlertAction actionWithTitle:LOC(@"button.NO") style:UIAlertActionStyleDefault handler:nil];
+            [alert addAction:oneAct];
+            
+            [self presentViewController:alert animated:YES completion:nil];
+        }
+        else
+        {
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:LOC(@"title.OrderConfirmation") message:LOC(@"text.SetOrderConfirmation") preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *oneAct = [UIAlertAction actionWithTitle:LOC(@"button.YES") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                [_order markConfirmed];
+                [_ordersManager updateOrder:_order];
+                [self updateToolbar];
+            }];
+            [alert addAction:oneAct];
+            
+            oneAct = [UIAlertAction actionWithTitle:LOC(@"button.NO") style:UIAlertActionStyleDefault handler:nil];
+            [alert addAction:oneAct];
+            
+            [self presentViewController:alert animated:YES completion:nil];
+        }
+    }
+
+    if( _tabitmDelivered == item )
+    {
+        if( [_order delivered] )
+        {
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:LOC(@"title.RemoveDelivery") message:LOC(@"text.RemoveDelivery") preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *oneAct = [UIAlertAction actionWithTitle:LOC(@"button.YES") style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+                [_order markNotDelivered];
+                [_ordersManager updateOrder:_order];
+                [self updateToolbar];
+            }];
+            [alert addAction:oneAct];
+            
+            oneAct = [UIAlertAction actionWithTitle:LOC(@"button.NO") style:UIAlertActionStyleDefault handler:nil];
+            [alert addAction:oneAct];
+            
+            [self presentViewController:alert animated:YES completion:nil];
+        }
+        else
+        {
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:LOC(@"title.OrderDelivery") message:LOC(@"text.SetOrderDelivery") preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *oneAct = [UIAlertAction actionWithTitle:LOC(@"button.YES") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                [_order markDelivered];
+                [_ordersManager updateOrder:_order];
+                [self updateToolbar];
+            }];
+            [alert addAction:oneAct];
+            
+            oneAct = [UIAlertAction actionWithTitle:LOC(@"button.NO") style:UIAlertActionStyleDefault handler:nil];
+            [alert addAction:oneAct];
+            
+            [self presentViewController:alert animated:YES completion:nil];
+        }
+    }
+
+}
+
 
 @end
