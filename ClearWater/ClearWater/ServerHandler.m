@@ -23,6 +23,7 @@
 
 -(BOOL)sendOrder:(OrderModel *)order
 {
+    return YES;
     NSString *orderAsParams = [self POSTParamsToString:[order valuesDict]];
     NSMutableURLRequest *uploadReq = [self prepReqestWithParams:orderAsParams];
     [uploadReq setURL:[NSURL URLWithString:kURLNewOrder]];
