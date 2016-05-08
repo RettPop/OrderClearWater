@@ -6,6 +6,7 @@
   Copyright © 2016 SapiSoft. All rights reserved.
 */
 "title.MainScreen" = "Clear Water";
+"title.AboutScreen" = "About";
 "button.RestoreOrder" = "Refill";
 "placeholder.ClientCode" = "Client code";
 "placeholder.AddressCity" = "City";
@@ -92,3 +93,7 @@
 
 "message.ErrorSendingCallbackRequest" = "Some error appeared while requesting callback. Please try again later.";
 "message.CallbackWasRequested" = "Callback request was sent successfully. We will call you shortly.";
+
+"text.Disclaimer" = "Application is client for drinking water delivery service http://www.clearwater.UA.\nAlthought, application's author is not affiiliated to the service and does not guarantee any functionality and support from the service side.";
+"text.ServiceSite" = "Service website";
+"title.section.General" = "General";

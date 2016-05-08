@@ -117,6 +117,9 @@ typedef enum : NSUInteger {
 
     NSComparisonResult result = [[oneOrder scheduleDate] compare:[NSDate date]];
     BOOL orderIsActive = (result == NSOrderedDescending || result == NSOrderedSame);
+    if( [oneOrder delivered] ) {
+        orderIsActive = NO;
+    }
    [[cell textLabel] setFont:orderIsActive ? kFontActiveOrderCellTitle : kFontInactiveOrderCellTitle];
     
     return cell;

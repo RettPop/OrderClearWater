@@ -64,6 +64,7 @@
 #define kURLNewOrder @"http://www.clearwater.ua/order/_system/jsorder.php"
 //#define kURLNewOrder @"https://requestb.in/p9vw66p9"
 #define kURLCallback @"http://www.clearwater.ua"
+#define kURLServiceSite @"http://www.clearwater.ua"
 
 
 #endif /* CWConstants_h */

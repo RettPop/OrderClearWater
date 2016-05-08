@@ -6,6 +6,7 @@
   Copyright © 2016 SapiSoft. All rights reserved.
 */
 "title.MainScreen" = "Clear Water";
+"title.AboutScreen" = "Про додаток";
 "button.RestoreOrder" = "Згадати";
 "placeholder.ClientCode" = "Код клиента";
 "placeholder.AddressCity" = "Мiсто";
@@ -90,3 +91,7 @@
 
 "message.ErrorSendingCallbackRequest" = "Виникла помилка вiдправки запиту. Спробуйте трохи пiзнiше.";
 "message.CallbackWasRequested" = "Запит успiшно вiдправлено. Очикуйте на дзвiнок.";
+
+"text.Disclaimer" = "Додаток є клiєнтом до сервiсу доставки питтєвої води http://www.clearwater.ua.\nАле автор додатку нiяк не зв'язан з цiм сервисом та не может гарантувати анi працездатнисть сервису, анi пiдтримки з його боку.";
+"text.ServiceSite" = "Вебсторiнка сервису";
+"title.section.General" = "Загальнi";

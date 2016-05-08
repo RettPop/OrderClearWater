@@ -51,6 +51,8 @@
 		7BDD6F521CDEB5F900DA157B /* notdelivered@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7BDD6F4A1CDEB5F900DA157B /* notdelivered@2x.png */; };
 		7BDD6F531CDEB5F900DA157B /* notdelivered@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7BDD6F4B1CDEB5F900DA157B /* notdelivered@3x.png */; };
 		7BDD6F571CDF796900DA157B /* ImageCenterButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDD6F561CDF796900DA157B /* ImageCenterButton.m */; };
+		7BDD6F611CDF995700DA157B /* appimage.png in Resources */ = {isa = PBXBuildFile; fileRef = 7BDD6F601CDF995700DA157B /* appimage.png */; };
+		7BDD6F641CDF99A900DA157B /* VCAbout.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BDD6F631CDF99A900DA157B /* VCAbout.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -115,6 +117,9 @@
 		7BDD6F4B1CDEB5F900DA157B /* notdelivered@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "notdelivered@3x.png"; path = "images/notdelivered@3x.png"; sourceTree = "<group>"; };
 		7BDD6F551CDF796900DA157B /* ImageCenterButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageCenterButton.h; sourceTree = "<group>"; };
 		7BDD6F561CDF796900DA157B /* ImageCenterButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageCenterButton.m; sourceTree = "<group>"; };
+		7BDD6F601CDF995700DA157B /* appimage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = appimage.png; path = images/appimage.png; sourceTree = "<group>"; };
+		7BDD6F621CDF99A900DA157B /* VCAbout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VCAbout.h; sourceTree = "<group>"; };
+		7BDD6F631CDF99A900DA157B /* VCAbout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VCAbout.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -180,6 +185,8 @@
 				7BB2689E1CBFA6A20085EEC3 /* OrdersManager.m */,
 				7BDD6F351CDE596800DA157B /* VCBase.h */,
 				7BDD6F361CDE596800DA157B /* VCBase.m */,
+				7BDD6F621CDF99A900DA157B /* VCAbout.h */,
+				7BDD6F631CDF99A900DA157B /* VCAbout.m */,
 			);
 			path = ClearWater;
 			sourceTree = "<group>";
@@ -198,6 +205,7 @@
 		7B5BA8E01CC19A42008B948C /* images */ = {
 			isa = PBXGroup;
 			children = (
+				7BDD6F601CDF995700DA157B /* appimage.png */,
 				7BDD6F441CDEB5F900DA157B /* confirmed@2x.png */,
 				7BDD6F451CDEB5F900DA157B /* confirmed@3x.png */,
 				7BDD6F461CDEB5F900DA157B /* delivered@2x.png */,
@@ -303,6 +311,7 @@
 				7BDD6F411CDEA8DB00DA157B /* calback@3x.png in Resources */,
 				7BDD6F421CDEA8DB00DA157B /* home@2x.png in Resources */,
 				7B5BA8F61CC19A4D008B948C /* Icon-Small@3x.png in Resources */,
+				7BDD6F611CDF995700DA157B /* appimage.png in Resources */,
 				7BDD6F3E1CDEA8DB00DA157B /* about@2x.png in Resources */,
 				7BDD6F531CDEB5F900DA157B /* notdelivered@3x.png in Resources */,
 				7B5BA8F41CC19A4D008B948C /* Icon-Small.png in Resources */,
@@ -354,6 +363,7 @@
 				7B5BA8DF1CC12FDA008B948C /* OrdersList.m in Sources */,
 				7B558D991CBA85F4007B0776 /* CWAddress.m in Sources */,
 				7BDD6F571CDF796900DA157B /* ImageCenterButton.m in Sources */,
+				7BDD6F641CDF99A900DA157B /* VCAbout.m in Sources */,
 				7B558D8E1CB6DF69007B0776 /* OrderModel.m in Sources */,
 				7B558D711CB695FA007B0776 /* AppDelegate.m in Sources */,
 				7B558D6E1CB695FA007B0776 /* main.m in Sources */,

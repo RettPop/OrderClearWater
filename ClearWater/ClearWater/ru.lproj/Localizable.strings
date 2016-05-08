@@ -6,6 +6,7 @@
   Copyright © 2016 SapiSoft. All rights reserved.
 */
 "title.MainScreen" = "Clear Water";
+"title.AboutScreen" = "О программе";
 "button.RestoreOrder" = "Вспомнить";
 "placeholder.ClientCode" = "Код клиента";
 "placeholder.AddressCity" = "Город";
@@ -88,3 +89,7 @@
 
 "message.ErrorSendingCallbackRequest" = "При отправке запроса возникла ошибка. Попробуйте повторить позже.";
 "message.CallbackWasRequested" = "Запрос успешно отправлен. Мы вскоре перезвоним вам.";
+
+"text.Disclaimer" = "Приложение является клиентом для работы с сервисом доставки питьевой воды http://www.clearwater.ua.\nОднако автор приложения никак не связан с самим сервисом и не может гарантировать ни работоспособности сервиса, ни поддержки с его стороны.";
+"text.ServiceSite" = "Вебсайт сервиса";
+"title.section.General" = "Общие";
