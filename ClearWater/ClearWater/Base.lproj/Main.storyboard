@@ -3,6 +3,9 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Alignment constraints to the first baseline" minToolsVersion="6.0"/>
+        <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
     </dependencies>
     <scenes>
         <!--Edit Order-->
@@ -40,42 +43,89 @@
                                     <action selector="sendOrderTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="dxJ-bp-l9z"/>
                                 </connections>
                             </button>
-                            <tabBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="y92-dr-vhv">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OW7-Q9-5wu">
                                 <rect key="frame" x="0.0" y="618" width="375" height="49"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <items>
-                                    <tabBarItem title="Confirmed" image="notconfirmed.png" id="b08-yV-Zc5"/>
-                                    <tabBarItem title="Delivered" image="notdelivered.png" id="dB4-sz-5vW"/>
-                                </items>
-                                <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <connections>
-                                    <outlet property="delegate" destination="BYZ-38-t0r" id="dch-pf-VUA"/>
-                                </connections>
-                            </tabBar>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fv3-gw-0tC" customClass="ImageCenterButton">
+                                        <rect key="frame" x="0.0" y="0.0" width="180" height="49"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <inset key="titleEdgeInsets" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                        <state key="normal" title="Button" image="confirmed.png">
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="size" keyPath="imageViewMaxSize">
+                                                <size key="value" width="50" height="50"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="imageTextSpace">
+                                                <real key="value" value="-1"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="btnConfirmedTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="uIV-VY-ndg"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Lcp-Ws-c8t" customClass="ImageCenterButton">
+                                        <rect key="frame" x="188" y="0.0" width="187" height="49"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <inset key="titleEdgeInsets" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                        <state key="normal" title="Delivered" image="delivered.png">
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="imageIsRound" value="NO"/>
+                                            <userDefinedRuntimeAttribute type="size" keyPath="imageViewMaxSize">
+                                                <size key="value" width="50" height="50"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="imageTextSpace">
+                                                <real key="value" value="-1"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="btnDeliveredTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="iai-UT-xJh"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="Fv3-gw-0tC" firstAttribute="width" secondItem="OW7-Q9-5wu" secondAttribute="width" multiplier="0.5" id="32g-r3-sug"/>
+                                    <constraint firstItem="Lcp-Ws-c8t" firstAttribute="width" secondItem="OW7-Q9-5wu" secondAttribute="width" multiplier="0.5" id="MPW-I7-13g"/>
+                                    <constraint firstItem="Fv3-gw-0tC" firstAttribute="leading" secondItem="OW7-Q9-5wu" secondAttribute="leading" id="Nkl-D7-yoW"/>
+                                    <constraint firstItem="Fv3-gw-0tC" firstAttribute="firstBaseline" secondItem="Lcp-Ws-c8t" secondAttribute="baseline" id="PHt-wE-qAg"/>
+                                    <constraint firstAttribute="bottom" secondItem="Fv3-gw-0tC" secondAttribute="bottom" id="Sqd-iJ-8ZT"/>
+                                    <constraint firstItem="Fv3-gw-0tC" firstAttribute="top" secondItem="OW7-Q9-5wu" secondAttribute="top" id="Wzi-0K-rwl"/>
+                                    <constraint firstItem="Fv3-gw-0tC" firstAttribute="top" secondItem="Lcp-Ws-c8t" secondAttribute="top" id="cT2-mq-qz3"/>
+                                    <constraint firstItem="Fv3-gw-0tC" firstAttribute="baseline" secondItem="Lcp-Ws-c8t" secondAttribute="firstBaseline" id="eF6-7I-pKd"/>
+                                    <constraint firstItem="Fv3-gw-0tC" firstAttribute="leading" secondItem="OW7-Q9-5wu" secondAttribute="leading" id="owV-ke-7TS"/>
+                                    <constraint firstAttribute="trailing" secondItem="Lcp-Ws-c8t" secondAttribute="trailing" id="ruz-Ob-ew7"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="FPZ-qF-gwV" firstAttribute="top" secondItem="kj9-mj-QXl" secondAttribute="bottom" priority="750" constant="-2" id="1WF-Mt-Uzj"/>
                             <constraint firstItem="kj9-mj-QXl" firstAttribute="trailing" secondItem="FPZ-qF-gwV" secondAttribute="trailing" id="25w-if-G7d"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="y92-dr-vhv" secondAttribute="bottom" id="3dc-ZN-5KG"/>
+                            <constraint firstItem="OW7-Q9-5wu" firstAttribute="top" secondItem="FPZ-qF-gwV" secondAttribute="top" id="5dO-fD-4vO"/>
                             <constraint firstItem="kj9-mj-QXl" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="5sk-x5-8Oe"/>
                             <constraint firstItem="kj9-mj-QXl" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="-64" id="EiK-HM-zRD"/>
+                            <constraint firstItem="OW7-Q9-5wu" firstAttribute="leading" secondItem="FPZ-qF-gwV" secondAttribute="leading" id="IAD-d4-eBx"/>
                             <constraint firstItem="kj9-mj-QXl" firstAttribute="leading" secondItem="FPZ-qF-gwV" secondAttribute="leading" id="K4Z-av-e29"/>
-                            <constraint firstItem="y92-dr-vhv" firstAttribute="trailing" secondItem="FPZ-qF-gwV" secondAttribute="trailing" id="XNZ-ya-yKW"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="FPZ-qF-gwV" secondAttribute="bottom" id="fe7-AP-KMw"/>
+                            <constraint firstItem="OW7-Q9-5wu" firstAttribute="bottom" secondItem="wfy-db-euE" secondAttribute="top" id="XKA-BY-SRq"/>
+                            <constraint firstItem="OW7-Q9-5wu" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" id="Y9d-tL-tTS"/>
+                            <constraint firstItem="OW7-Q9-5wu" firstAttribute="bottom" secondItem="FPZ-qF-gwV" secondAttribute="bottom" id="YMe-fl-dSU"/>
+                            <constraint firstItem="OW7-Q9-5wu" firstAttribute="trailing" secondItem="FPZ-qF-gwV" secondAttribute="trailing" id="pA3-Mc-CNZ"/>
                             <constraint firstItem="kj9-mj-QXl" firstAttribute="bottom" secondItem="FPZ-qF-gwV" secondAttribute="bottom" priority="250" constant="-47" id="pde-4W-Kpy"/>
                             <constraint firstAttribute="trailing" secondItem="kj9-mj-QXl" secondAttribute="trailing" id="xRL-YJ-cFd"/>
-                            <constraint firstItem="y92-dr-vhv" firstAttribute="leading" secondItem="FPZ-qF-gwV" secondAttribute="leading" id="xhh-yZ-SWL"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="mxL-gm-brG" userLabel="I"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
                     <connections>
+                        <outlet property="bottmBar" destination="OW7-Q9-5wu" id="9l4-j4-BHR"/>
+                        <outlet property="btnConfirmed" destination="Fv3-gw-0tC" id="gh6-nv-UqK"/>
+                        <outlet property="btnDelivered" destination="Lcp-Ws-c8t" id="1Qv-sA-0Rk"/>
                         <outlet property="btnSendOrder" destination="FPZ-qF-gwV" id="YCX-5g-IRo"/>
                         <outlet property="constrSendButtonHeight" destination="1WF-Mt-Uzj" id="tgz-0G-NFS"/>
-                        <outlet property="tabbar" destination="y92-dr-vhv" id="HIZ-g0-G0f"/>
-                        <outlet property="tabitmConfirmed" destination="b08-yV-Zc5" id="cu7-VD-S7d"/>
-                        <outlet property="tabitmDelivered" destination="dB4-sz-5vW" id="56B-84-gVX"/>
                         <outlet property="tableView" destination="kj9-mj-QXl" id="gJs-hG-htN"/>
                         <outlet property="tableViewBottom" destination="pde-4W-Kpy" id="qJG-CR-9iC"/>
                     </connections>
@@ -167,25 +217,6 @@
             </objects>
             <point key="canvasLocation" x="1012.5" y="1223.5"/>
         </scene>
-        <!--Contacts-->
-        <scene sceneID="gOT-fk-OYm">
-            <objects>
-                <viewController storyboardIdentifier="VCContacts" title="Contacts" id="0uK-vS-sDV" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="bPG-nH-j2M"/>
-                        <viewControllerLayoutGuide type="bottom" id="U7x-47-w19"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="g1s-QM-7Ms">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
-                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="5Pb-hb-Gcv" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1561" y="1186"/>
-        </scene>
         <!--Navigation Controller-->
         <scene sceneID="rTK-70-qRO">
             <objects>
@@ -209,8 +240,8 @@
     <resources>
         <image name="about.png" width="25" height="25"/>
         <image name="calback.png" width="25" height="25"/>
+        <image name="confirmed.png" width="25" height="25"/>
+        <image name="delivered.png" width="25" height="25"/>
         <image name="home.png" width="25" height="25"/>
-        <image name="notconfirmed.png" width="25" height="25"/>
-        <image name="notdelivered.png" width="25" height="25"/>
     </resources>
 </document>

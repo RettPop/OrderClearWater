@@ -13,6 +13,7 @@
 #import "ServerHandler.h"
 #import "CWSchedule.h"
 #import "OrdersManager.h"
+#import "ImageCenterButton.h"
 
 #define kTableGeneralCellID @"kTableGeneralCellID"
 #define CompCellID(x,y) [NSString stringWithFormat:@"SECTION %li ITEM %li", (long)x, (long)y]
@@ -105,9 +106,9 @@ typedef enum : NSUInteger {
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *constrSendButtonHeight;
 
 
-@property (strong, nonatomic) IBOutlet UITabBar *tabbar;
-@property (strong, nonatomic) IBOutlet UITabBarItem *tabitmConfirmed;
-@property (strong, nonatomic) IBOutlet UITabBarItem *tabitmDelivered;
+@property (strong, nonatomic) IBOutlet ImageCenterButton *btnDelivered;
+@property (strong, nonatomic) IBOutlet ImageCenterButton *btnConfirmed;
+@property (strong, nonatomic) IBOutlet UIView *bottmBar;
 
 @end
 
@@ -152,35 +153,37 @@ typedef enum : NSUInteger {
 {
     if( !_order || ![_order dateConfirmed] )
     {
-        [_tabitmConfirmed setTitle:LOC(@"title.NotConfirmed")];
-        [_tabitmConfirmed setImage:[UIImage imageNamed:@"notconfirmed"]];
-        [_tabitmConfirmed setSelectedImage:[UIImage imageNamed:@"notconfirmed"]];
+        [_btnConfirmed setTitle:LOC(@"title.NotConfirmed") forState:UIControlStateNormal];
+        [_btnConfirmed setImage:[UIImage imageNamed:@"notconfirmed"] forState:UIControlStateNormal];
     }
     else
     {
-        [_tabitmConfirmed setTitle:LOC(@"title.Confirmed")];
-        [_tabitmConfirmed setImage:[UIImage imageNamed:@"confirmed"]];
-        [_tabitmConfirmed setSelectedImage:[UIImage imageNamed:@"confirmed"]];
+        [_btnConfirmed setTitle:LOC(@"title.Confirmed") forState:UIControlStateNormal];
+        [_btnConfirmed setImage:[UIImage imageNamed:@"confirmed"] forState:UIControlStateNormal];
     }
 
     if( !_order || ![_order delivered] )
     {
-        [_tabitmDelivered setTitle:LOC(@"title.NotDelivered")];
-        [_tabitmDelivered setImage:[UIImage imageNamed:@"notdelivered"]];
-        [_tabitmDelivered setSelectedImage:[UIImage imageNamed:@"notdelivered"]];
+        [_btnDelivered setTitle:LOC(@"title.NotDelivered") forState:UIControlStateNormal];
+        [_btnDelivered setImage:[UIImage imageNamed:@"notdelivered"] forState:UIControlStateNormal];
     }
     else
     {
-        [_tabitmDelivered setTitle:LOC(@"title.Delivered")];
-        [_tabitmDelivered setImage:[UIImage imageNamed:@"delivered"]];
-        [_tabitmDelivered setSelectedImage:[UIImage imageNamed:@"delivered"]];
+        [_btnDelivered setTitle:LOC(@"title.Delivered") forState:UIControlStateNormal];
+        [_btnDelivered setImage:[UIImage imageNamed:@"delivered"] forState:UIControlStateNormal];
     }
 }
 
 -(void)customizeItems
 {
-
-    [_tabbar setHidden:!_readonlyMode];
+    // Adding think line to the bottom panel's top
+    UIView *line = [[UIView alloc] initWithFrame:[_bottmBar bounds]];
+    [line setNewHeight:.7f];
+    [line setBackgroundColor:[UIColor lightGrayColor]];
+    [line setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
+    [_bottmBar addSubview:line];
+    [_bottmBar setHidden:!_readonlyMode];
+    
     [_btnSendOrder setTitle:LOC(@"button.SendOrder") forState:UIControlStateNormal];
 
     if( _readonlyMode )
@@ -213,7 +216,7 @@ typedef enum : NSUInteger {
 {
     _readonlyMode = roMode;
     [_btnSendOrder setHidden:_readonlyMode];
-    [_tabbar setHidden:!_readonlyMode];
+    [_bottmBar setHidden:!_readonlyMode];
     if(_readonlyMode)
     {
         [_tableViewBottom setPriority:UILayoutPriorityDefaultHigh];
@@ -675,6 +678,8 @@ typedef enum : NSUInteger {
         UIView *separator = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth([cell bounds]), 1.f)];
         [separator setBackgroundColor:[UIColor lightGrayColor]];
         [separator changeSizeWidthDelta:-SHIFT_DEFAULT*2 heightDelta:.0f];
+        [separator setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
+        
         [[cell contentView] addSubview:separator];
         [separator alignVerticalsWithMasterView:[cell contentView]];
         [[cell detailTextLabel] setFont:[UIFont systemFontOfSize:13.f]];
@@ -1105,77 +1110,71 @@ typedef enum : NSUInteger {
     }
 }
 
--(void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item
+- (IBAction)btnConfirmedTapped:(id)sender
 {
-    if( _tabitmConfirmed == item )
+    if( [_order dateConfirmed] )
     {
-        if( [_order dateConfirmed] )
-        {
-            UIAlertController *alert = [UIAlertController alertControllerWithTitle:LOC(@"title.RemoveConfirmation") message:LOC(@"text.RemoveConfirmation") preferredStyle:UIAlertControllerStyleAlert];
-            UIAlertAction *oneAct = [UIAlertAction actionWithTitle:LOC(@"button.YES") style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
-                [_order markNotConfirmed];
-                [_ordersManager updateOrder:_order];
-                [self updateToolbar];
-            }];
-            [alert addAction:oneAct];
-            
-            oneAct = [UIAlertAction actionWithTitle:LOC(@"button.NO") style:UIAlertActionStyleDefault handler:nil];
-            [alert addAction:oneAct];
-            
-            [self presentViewController:alert animated:YES completion:nil];
-        }
-        else
-        {
-            UIAlertController *alert = [UIAlertController alertControllerWithTitle:LOC(@"title.OrderConfirmation") message:LOC(@"text.SetOrderConfirmation") preferredStyle:UIAlertControllerStyleAlert];
-            UIAlertAction *oneAct = [UIAlertAction actionWithTitle:LOC(@"button.YES") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                [_order markConfirmed];
-                [_ordersManager updateOrder:_order];
-                [self updateToolbar];
-            }];
-            [alert addAction:oneAct];
-            
-            oneAct = [UIAlertAction actionWithTitle:LOC(@"button.NO") style:UIAlertActionStyleDefault handler:nil];
-            [alert addAction:oneAct];
-            
-            [self presentViewController:alert animated:YES completion:nil];
-        }
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:LOC(@"title.RemoveConfirmation") message:LOC(@"text.RemoveConfirmation") preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *oneAct = [UIAlertAction actionWithTitle:LOC(@"button.YES") style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+            [_order markNotConfirmed];
+            [_ordersManager updateOrder:_order];
+            [self updateToolbar];
+        }];
+        [alert addAction:oneAct];
+        
+        oneAct = [UIAlertAction actionWithTitle:LOC(@"button.NO") style:UIAlertActionStyleDefault handler:nil];
+        [alert addAction:oneAct];
+        
+        [self presentViewController:alert animated:YES completion:nil];
     }
-
-    if( _tabitmDelivered == item )
+    else
     {
-        if( [_order delivered] )
-        {
-            UIAlertController *alert = [UIAlertController alertControllerWithTitle:LOC(@"title.RemoveDelivery") message:LOC(@"text.RemoveDelivery") preferredStyle:UIAlertControllerStyleAlert];
-            UIAlertAction *oneAct = [UIAlertAction actionWithTitle:LOC(@"button.YES") style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
-                [_order markNotDelivered];
-                [_ordersManager updateOrder:_order];
-                [self updateToolbar];
-            }];
-            [alert addAction:oneAct];
-            
-            oneAct = [UIAlertAction actionWithTitle:LOC(@"button.NO") style:UIAlertActionStyleDefault handler:nil];
-            [alert addAction:oneAct];
-            
-            [self presentViewController:alert animated:YES completion:nil];
-        }
-        else
-        {
-            UIAlertController *alert = [UIAlertController alertControllerWithTitle:LOC(@"title.OrderDelivery") message:LOC(@"text.SetOrderDelivery") preferredStyle:UIAlertControllerStyleAlert];
-            UIAlertAction *oneAct = [UIAlertAction actionWithTitle:LOC(@"button.YES") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                [_order markDelivered];
-                [_ordersManager updateOrder:_order];
-                [self updateToolbar];
-            }];
-            [alert addAction:oneAct];
-            
-            oneAct = [UIAlertAction actionWithTitle:LOC(@"button.NO") style:UIAlertActionStyleDefault handler:nil];
-            [alert addAction:oneAct];
-            
-            [self presentViewController:alert animated:YES completion:nil];
-        }
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:LOC(@"title.OrderConfirmation") message:LOC(@"text.SetOrderConfirmation") preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *oneAct = [UIAlertAction actionWithTitle:LOC(@"button.YES") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [_order markConfirmed];
+            [_ordersManager updateOrder:_order];
+            [self updateToolbar];
+        }];
+        [alert addAction:oneAct];
+        
+        oneAct = [UIAlertAction actionWithTitle:LOC(@"button.NO") style:UIAlertActionStyleDefault handler:nil];
+        [alert addAction:oneAct];
+        
+        [self presentViewController:alert animated:YES completion:nil];
     }
-
 }
 
-
+- (IBAction)btnDeliveredTapped:(id)sender
+{
+    if( [_order delivered] )
+    {
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:LOC(@"title.RemoveDelivery") message:LOC(@"text.RemoveDelivery") preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *oneAct = [UIAlertAction actionWithTitle:LOC(@"button.YES") style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+            [_order markNotDelivered];
+            [_ordersManager updateOrder:_order];
+            [self updateToolbar];
+        }];
+        [alert addAction:oneAct];
+        
+        oneAct = [UIAlertAction actionWithTitle:LOC(@"button.NO") style:UIAlertActionStyleDefault handler:nil];
+        [alert addAction:oneAct];
+        
+        [self presentViewController:alert animated:YES completion:nil];
+    }
+    else
+    {
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:LOC(@"title.OrderDelivery") message:LOC(@"text.SetOrderDelivery") preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *oneAct = [UIAlertAction actionWithTitle:LOC(@"button.YES") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [_order markDelivered];
+            [_ordersManager updateOrder:_order];
+            [self updateToolbar];
+        }];
+        [alert addAction:oneAct];
+        
+        oneAct = [UIAlertAction actionWithTitle:LOC(@"button.NO") style:UIAlertActionStyleDefault handler:nil];
+        [alert addAction:oneAct];
+        
+        [self presentViewController:alert animated:YES completion:nil];
+    }
+}
 @end

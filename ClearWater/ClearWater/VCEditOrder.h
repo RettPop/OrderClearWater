@@ -10,7 +10,7 @@
 #import "OrderModel.h"
 #import "VCBase.h"
 
-@interface VCEditOrder : VCBase<UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource, UITabBarDelegate>
+@interface VCEditOrder : VCBase<UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource>
 
 -(void)displayOrder:(OrderModel *)order;
 
