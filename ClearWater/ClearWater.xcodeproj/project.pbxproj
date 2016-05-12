@@ -506,7 +506,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sapisoft.ClearWater;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "6ac68d53-90ce-4dd0-b495-aa041383e948";
+				PROVISIONING_PROFILE = "c7e7171e-c060-47e3-9e51-744b6aef943b";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -525,7 +525,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sapisoft.ClearWater;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "6ac68d53-90ce-4dd0-b495-aa041383e948";
+				PROVISIONING_PROFILE = "c7e7171e-c060-47e3-9e51-744b6aef943b";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
