@@ -95,3 +95,8 @@
 "text.Disclaimer" = "Додаток є клiєнтом до сервiсу доставки питтєвої води http://www.clearwater.ua.\nАле автор додатку нiяк не зв'язан з цiм сервисом та не может гарантувати анi працездатнисть сервису, анi пiдтримки з його боку.";
 "text.ServiceSite" = "Вебсторiнка сервису";
 "title.section.General" = "Загальнi";
+"text.SendFeedback" = "Зв'язатися з автором";
+"title.MailServiceIsNotAvailable" = "Помилка формування листа";
+"text.MailServiceIsNotAvailable" = "Поштовий сервiс недоступно. Сконфiгуруйте його та спробуйте ще раз";
+"mail.Hi" = "Привiт!";
+"mail.FeedbackOn" = "Зворотнiй зв'язок на";

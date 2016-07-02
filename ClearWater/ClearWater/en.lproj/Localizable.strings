@@ -97,3 +97,9 @@
 "text.Disclaimer" = "Application is client for drinking water delivery service http://www.clearwater.UA.\nAlthought, application's author is not affiiliated to the service and does not guarantee any functionality and support from the service side.";
 "text.ServiceSite" = "Service website";
 "title.section.General" = "General";
+"text.SendFeedback" = "Send feedback";
+
+"title.MailServiceIsNotAvailable" = "Error forming mail";
+"text.MailServiceIsNotAvailable" = "Mail service is not available. Please configure it and try again";
+"mail.Hi" = "Hi,";
+"mail.FeedbackOn" = "Feedback on";

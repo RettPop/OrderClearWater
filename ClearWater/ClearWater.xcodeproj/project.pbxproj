@@ -10,6 +10,7 @@
 		7B3898741CBB0CBA0062ECE1 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7B3898761CBB0CBA0062ECE1 /* Localizable.strings */; };
 		7B38987C1CBB19880062ECE1 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B38987A1CBB19880062ECE1 /* Fabric.framework */; };
 		7B38987D1CBB19880062ECE1 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B38987B1CBB19880062ECE1 /* Crashlytics.framework */; };
+		7B49AEAD1D27DE94008A73B2 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B49AEAC1D27DE94008A73B2 /* MessageUI.framework */; };
 		7B558D6E1CB695FA007B0776 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B558D6D1CB695FA007B0776 /* main.m */; };
 		7B558D711CB695FA007B0776 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B558D701CB695FA007B0776 /* AppDelegate.m */; };
 		7B558D771CB695FA007B0776 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7B558D751CB695FA007B0776 /* Main.storyboard */; };
@@ -61,6 +62,7 @@
 		7B3898781CBB0CD90062ECE1 /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/Localizable.strings; sourceTree = "<group>"; };
 		7B38987A1CBB19880062ECE1 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
 		7B38987B1CBB19880062ECE1 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
+		7B49AEAC1D27DE94008A73B2 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		7B558D691CB695F9007B0776 /* ClearWater.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ClearWater.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7B558D6D1CB695FA007B0776 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		7B558D6F1CB695FA007B0776 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -127,6 +129,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7B49AEAD1D27DE94008A73B2 /* MessageUI.framework in Frameworks */,
 				7BDD6F311CDE505900DA157B /* WebKit.framework in Frameworks */,
 				7B38987D1CBB19880062ECE1 /* Crashlytics.framework in Frameworks */,
 				7B38987C1CBB19880062ECE1 /* Fabric.framework in Frameworks */,
@@ -139,6 +142,7 @@
 		7B558D601CB695F8007B0776 = {
 			isa = PBXGroup;
 			children = (
+				7B49AEAC1D27DE94008A73B2 /* MessageUI.framework */,
 				7BDD6F301CDE505900DA157B /* WebKit.framework */,
 				7B558D6B1CB695F9007B0776 /* ClearWater */,
 				7B558D6A1CB695F9007B0776 /* Products */,
@@ -276,6 +280,7 @@
 				TargetAttributes = {
 					7B558D681CB695F8007B0776 = {
 						CreatedOnToolsVersion = 7.3;
+						DevelopmentTeam = AUP6MPX7R6;
 					};
 				};
 			};
@@ -496,7 +501,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -506,7 +512,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sapisoft.ClearWater;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "c7e7171e-c060-47e3-9e51-744b6aef943b";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -515,7 +521,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -525,7 +532,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sapisoft.ClearWater;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "c7e7171e-c060-47e3-9e51-744b6aef943b";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;

@@ -13,6 +13,8 @@
 #import "WebKit/WKWebView.h"
 #import "WebKit/WKWebViewConfiguration.h"
 #import "WebKit/WKPreferences.h"
+#import "WebKit/WKNavigationAction.h"
+#import <Crashlytics/Crashlytics.h>
 
 typedef enum : NSUInteger {
     APPSCREEN_ORDERS = 1,
@@ -260,7 +262,10 @@ typedef enum : NSUInteger {
     [[self view] addSubview:_webView];
     
     _callbackPhone = phone;
-    [_webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:kURLCallback]]];
+    NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:kURLCallback]];
+    [req setValue:@"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2227.0 Safari/537.36" forHTTPHeaderField:@"User-Agent"];
+    [req setValue:@"http://www.clearwater.ua/mobile/" forHTTPHeaderField: @"Referer"];
+    [_webView loadRequest:req];
 }
 
 -(void)webView:(WKWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error
@@ -274,12 +279,18 @@ typedef enum : NSUInteger {
 {
     DLog(@"Page downloaded");
     
+    [Answers logCustomEventWithName:@"Request callback"
+                   customAttributes:nil];
+    
     NSString *js = [NSString stringWithFormat:@"document.getElementById('form_models_CallForm_telephone').value = '%@';", _callbackPhone];
     
     [webView evaluateJavaScript:js completionHandler:^(id _Nullable someID, NSError * _Nullable error) {
         DLog(@"Phone numbers was set");
         if( error ) {
-            NSLog(@"JS error appeared: %@", [error description]);
+            DLog(@"JS error appeared while setting phone number: %@", [error description]);
+            [Answers logCustomEventWithName:@"Error while callback request"
+                           customAttributes:@{@"Stage":@"Setting phone", @"JS Error":[error description]}];
+
         }
     }];
     
@@ -289,7 +300,9 @@ typedef enum : NSUInteger {
         DLog(@"Submit was simulated");
         
         if( error ) {
-            NSLog(@"JS error appeared: %@", [error description]);
+            DLog(@"JS error appeared while simulating submit: %@", [error description]);
+            [Answers logCustomEventWithName:@"Error while callback request"
+                           customAttributes:@{@"Stage":@"Submitting form", @"JS Error":[error description]}];
         }
         [webView removeFromSuperview];
         _callbackBlock(nil == error);

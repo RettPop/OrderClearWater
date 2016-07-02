@@ -7,6 +7,7 @@
 //
 
 #import "VCAbout.h"
+#import <Crashlytics/Crashlytics.h>
 
 typedef enum : NSUInteger {
     SECTION_GENERAL,
@@ -15,12 +16,14 @@ typedef enum : NSUInteger {
 typedef enum : NSUInteger {
     GENERAL_SERVICE_SITE,
     GENERAL_APP_VERSION,
+    GENERAL_FEEDBACK,
 } SectionsItems;
 
 @interface VCAbout()
 @property (strong, nonatomic) IBOutlet UITextView *textAbout;
 @property (strong, nonatomic) IBOutlet UILabel *lblServiceSite;
 @property (strong, nonatomic) IBOutlet UILabel *lblAppVersion;
+@property (strong, nonatomic) IBOutlet UILabel *lblFeedback;
 
 @end
 
@@ -46,6 +49,7 @@ typedef enum : NSUInteger {
     [_lblAppVersion setText:[NSString stringWithFormat:@"%@ v.%@(%@)", bundleName, version, build]];
 
     [_lblServiceSite setText:LOC(@"text.ServiceSite")];
+    [_lblFeedback setText:LOC(@"text.SendFeedback")];
     [[self navigationItem] setTitle:LOC(@"title.AboutScreen")];
 }
 
@@ -70,25 +74,61 @@ typedef enum : NSUInteger {
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    switch (indexPath.section)
+    if ( SECTION_GENERAL == indexPath.section )
     {
-        case SECTION_GENERAL:
+        switch (indexPath.row)
         {
-            switch (indexPath.row)
+            case GENERAL_SERVICE_SITE:
+                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:kURLServiceSite]];
+                break;
+            case GENERAL_FEEDBACK:
             {
-                case GENERAL_SERVICE_SITE:
-                    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:kURLServiceSite]];
-                    break;
-                    
-                default:
-                    break;
+                if (![MFMailComposeViewController canSendMail])
+                {
+                    DLog(@"Mail services are not available.");
+                    UIAlertController *alert = [UIAlertController alertControllerWithTitle:LOC(@"title.MailServiceIsNotAvailable")
+                                                                                   message:LOC(@"text.MailServiceIsNotAvailable")
+                                                                            preferredStyle:UIAlertControllerStyleAlert];
+                    [alert addAction:[UIAlertAction actionWithTitle:LOC(@"button.OK")
+                                                              style:UIAlertActionStyleDefault
+                                                            handler:nil]];
+                    [self presentViewController:alert animated:YES completion:nil];
+                    return;
+                }
+                
+                MFMailComposeViewController *mailVC = [[MFMailComposeViewController alloc] init];
+                mailVC.mailComposeDelegate = self;
+                
+                NSDictionary *infoDictionary = [[NSBundle mainBundle]infoDictionary];
+                NSString *version = infoDictionary[@"CFBundleShortVersionString"];
+                NSString *build = infoDictionary[(NSString*)kCFBundleVersionKey];
+                NSString *bundleName = infoDictionary[(NSString *)kCFBundleNameKey];
+                NSString *subj = [NSString stringWithFormat:@"%@ %@ v.%@(%@)", LOC(@"mail.FeedbackOn"), bundleName, version, build];
+
+                [Answers logCustomEventWithName:@"Sending feedback" customAttributes:@{@"Subj":subj}];
+
+                [mailVC setToRecipients:@[@"clearwater@sapisoft.com"]];
+                [mailVC setSubject:subj];
+                [mailVC setMessageBody:LOC(@"mail.Hi") isHTML:NO];
+                [self presentViewController:mailVC animated:YES completion:nil];
             }
-            break;
+            default:
+                break;
         }
-            
-        default:
-            break;
     }
+}
+
+-(void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error
+{
+    if( error ) {
+        [Answers logCustomEventWithName:@"Error sending feedback"
+                   customAttributes:@{@"Error":[error description]}];
+    }
+    else {
+        [Answers logCustomEventWithName:@"Feedback sent"
+                       customAttributes:nil];
+    }
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end

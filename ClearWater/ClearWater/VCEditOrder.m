@@ -14,6 +14,7 @@
 #import "CWSchedule.h"
 #import "OrdersManager.h"
 #import "ImageCenterButton.h"
+#import <Crashlytics/Crashlytics.h>
 
 #define kTableGeneralCellID @"kTableGeneralCellID"
 #define CompCellID(x,y) [NSString stringWithFormat:@"SECTION %li ITEM %li", (long)x, (long)y]
@@ -408,6 +409,8 @@ typedef enum : NSUInteger {
 
 -(void)processNewOrder:(OrderModel *)order
 {
+    [Answers logCustomEventWithName:@"Process order" customAttributes:@{@"OrderID":[order orderID]}];
+    
     [self showActivity];
     ASYNC_BLOCK_START
     BOOL isSent = [[ServerHandler sharedInstance] sendOrder:order];
@@ -425,9 +428,11 @@ typedef enum : NSUInteger {
         }]];
         
         [self presentViewController:alert animated:YES completion:nil];
+        [Answers logCustomEventWithName:@"Order processed" customAttributes:@{@"OrderID":[order orderID]}];
     }
     else
     {
+        [Answers logCustomEventWithName:@"Error processing order" customAttributes:@{@"OrderID":[order orderID]}];
         [self showError:LOC(@"message.ErrorSendingOrder")];
     }
     [self hideActivity];
