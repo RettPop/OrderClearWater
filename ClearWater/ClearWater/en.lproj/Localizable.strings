@@ -12,11 +12,11 @@
 "placeholder.AddressCity" = "City";
 "placeholder.AddressStreet" = "Street(*)";
 "placeholder.addressHouse" = "House(*)";
-"placeholder.addressApt" = "Apartments(*)";
+"placeholder.addressApt" = "Apartment(*)";
 "placeholder.addressContactName" = "Contact name(*)";
 "placeholder.addressContactPhone" = "Contact phone(*)";
-"placeholder.scheduleTime" = "Delivery period";
-"placeholder.scheduleDate" = "Delivery date";
+"placeholder.scheduleTime" = "Delivery period(*)";
+"placeholder.scheduleDate" = "Delivery date(*)";
 "placeholder.confirmSMS" = "Confirm by SMS";
 "placeholder.confirmPhone" = "Confirm by phone";
 "placeholder.confirmEmail" = "Confirm by email";

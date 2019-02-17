@@ -305,7 +305,7 @@ typedef enum : NSUInteger {
                            customAttributes:@{@"Stage":@"Submitting form", @"JS Error":[error description]}];
         }
         [webView removeFromSuperview];
-        _callbackBlock(nil == error);
+        self->_callbackBlock(nil == error);
     }];
 }
 

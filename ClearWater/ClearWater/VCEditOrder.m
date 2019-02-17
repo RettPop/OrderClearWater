@@ -401,7 +401,7 @@ typedef enum : NSUInteger {
                                                                    message:LOC(@"message.text.SendOrder?")
                                                             preferredStyle:UIAlertControllerStyleActionSheet];
     [alert addAction:[UIAlertAction actionWithTitle:LOC(@"button.YES") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
-        [self processNewOrder:_order];
+        [self processNewOrder:self->_order];
     }]];
     [alert addAction:[UIAlertAction actionWithTitle:LOC(@"button.NO") style:UIAlertActionStyleCancel handler:nil]];
     [self presentViewController:alert animated:YES completion:nil];
@@ -419,7 +419,7 @@ typedef enum : NSUInteger {
     if( isSent )
     {
         [order markSent];
-        [_ordersManager addNewOrder:order];
+        [self->_ordersManager addNewOrder:order];
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:LOC(@"title.Success")
                                                                        message:LOC(@"message.OrderWasSent")
                                                                 preferredStyle:UIAlertControllerStyleAlert];
@@ -754,19 +754,19 @@ typedef enum : NSUInteger {
                 {
                     case ITEM_CONTENT_CLEARWATER:
                     {
-                        [label setText:[NSString stringWithFormat:@"%li", [_order clearWater]]];
+                        [label setText:[NSString stringWithFormat:@"%li", (long)[_order clearWater]]];
                         [[cell textLabel] setText:LOC(@"cellText.ClearWater")];
                         break;
                     }
                     case ITEM_CONTENT_FLUORIDATED:
                     {
-                        [label setText:[NSString stringWithFormat:@"%li", [_order fluoridedWater]]];
+                        [label setText:[NSString stringWithFormat:@"%li", (long)[_order fluoridedWater]]];
                         [[cell textLabel] setText:LOC(@"cellText.FluoridedWater")];
                         break;
                     }
                     case ITEM_CONTENT_IODINATED:
                     {
-                        [label setText:[NSString stringWithFormat:@"%li", [_order iondinatedWater]]];
+                        [label setText:[NSString stringWithFormat:@"%li", (long)[_order iondinatedWater]]];
                         [[cell textLabel] setText:LOC(@"cellText.IodinatedWater")];
                         break;
                     }
@@ -1036,8 +1036,8 @@ typedef enum : NSUInteger {
     // will shift view DOWN on keyboard disappear
     [UIView animateWithDuration:.2f animations:^{
         //[[self view] changeFrameXDelta:.0f yDelta:_viewShiftDelta];
-        [[self view] changeSizeWidthDelta:.0f heightDelta:_viewShiftDelta];
-        _viewShiftDelta = .0f;
+        [[self view] changeSizeWidthDelta:.0f heightDelta:self->_viewShiftDelta];
+        self->_viewShiftDelta = .0f;
     } completion:^(BOOL finished) {
     }];
 }
@@ -1052,10 +1052,10 @@ typedef enum : NSUInteger {
     if( _viewShiftDelta > 0 ) {
         [UIView animateWithDuration:.2f animations:^{
             //[[self view] changeFrameXDelta:.0f yDelta:-_viewShiftDelta];
-            [[self view] changeSizeWidthDelta:.0f heightDelta:-_viewShiftDelta];
+            [[self view] changeSizeWidthDelta:.0f heightDelta:-self->_viewShiftDelta];
         } completion:^(BOOL finished) {
             if(finished){
-                _isKBVisible = YES;
+                self->_isKBVisible = YES;
             }
         }];
     }
@@ -1121,8 +1121,8 @@ typedef enum : NSUInteger {
     {
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:LOC(@"title.RemoveConfirmation") message:LOC(@"text.RemoveConfirmation") preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction *oneAct = [UIAlertAction actionWithTitle:LOC(@"button.YES") style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
-            [_order markNotConfirmed];
-            [_ordersManager updateOrder:_order];
+            [self->_order markNotConfirmed];
+            [self->_ordersManager updateOrder:self->_order];
             [self updateToolbar];
         }];
         [alert addAction:oneAct];
@@ -1136,8 +1136,8 @@ typedef enum : NSUInteger {
     {
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:LOC(@"title.OrderConfirmation") message:LOC(@"text.SetOrderConfirmation") preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction *oneAct = [UIAlertAction actionWithTitle:LOC(@"button.YES") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            [_order markConfirmed];
-            [_ordersManager updateOrder:_order];
+            [self->_order markConfirmed];
+            [self->_ordersManager updateOrder:self->_order];
             [self updateToolbar];
         }];
         [alert addAction:oneAct];
@@ -1155,8 +1155,8 @@ typedef enum : NSUInteger {
     {
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:LOC(@"title.RemoveDelivery") message:LOC(@"text.RemoveDelivery") preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction *oneAct = [UIAlertAction actionWithTitle:LOC(@"button.YES") style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
-            [_order markNotDelivered];
-            [_ordersManager updateOrder:_order];
+            [self->_order markNotDelivered];
+            [self->_ordersManager updateOrder:self->_order];
             [self updateToolbar];
         }];
         [alert addAction:oneAct];
@@ -1170,8 +1170,8 @@ typedef enum : NSUInteger {
     {
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:LOC(@"title.OrderDelivery") message:LOC(@"text.SetOrderDelivery") preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction *oneAct = [UIAlertAction actionWithTitle:LOC(@"button.YES") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            [_order markDelivered];
-            [_ordersManager updateOrder:_order];
+            [self->_order markDelivered];
+            [self->_ordersManager updateOrder:self->_order];
             [self updateToolbar];
         }];
         [alert addAction:oneAct];

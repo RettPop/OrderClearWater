@@ -105,10 +105,10 @@
     
     BOOL isOK = FALSE;
 
-    NSString *dataString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    if(   [dataString localizedCaseInsensitiveContainsString:@"OK"]
-       || [dataString localizedCaseInsensitiveContainsString:@"MAIL"]
-       || [dataString localizedCaseInsensitiveContainsString:@"POST"] )
+//    NSString *dataString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+//    if(   [dataString localizedCaseInsensitiveContainsString:@"OK"]
+//       || [dataString localizedCaseInsensitiveContainsString:@"MAIL"]
+//       || [dataString localizedCaseInsensitiveContainsString:@"POST"] )
     {
         // to simplify condition above
         if( [response statusCode] == 200 ) {

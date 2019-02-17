@@ -30,29 +30,29 @@
         [self hideActivity];
     }
     dispatch_async(dispatch_get_main_queue(), ^(void){
-        _activity = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
-        [_activity setCenter:self.view.center];
-        [_activity startAnimating];
+        self->_activity = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+        [self->_activity setCenter:self.view.center];
+        [self->_activity startAnimating];
         
-        _activityBG = [[UIView alloc] initWithFrame:[[self view] bounds]];
-        [_activityBG setCenter:[[self view] center]];
-        [_activityBG setBackgroundColor:[UIColor blackColor]];
-        [_activityBG setAlpha:.7f];
+        self->_activityBG = [[UIView alloc] initWithFrame:[[self view] bounds]];
+        [self->_activityBG setCenter:[[self view] center]];
+        [self->_activityBG setBackgroundColor:[UIColor blackColor]];
+        [self->_activityBG setAlpha:.7f];
         
-        [[[UIApplication sharedApplication] keyWindow] addSubview:_activityBG];
-        [[[UIApplication sharedApplication] keyWindow] addSubview:_activity];
-        [[[UIApplication sharedApplication] keyWindow] bringSubviewToFront:_activityBG];
-        [[[UIApplication sharedApplication] keyWindow] bringSubviewToFront:_activity];
+        [[[UIApplication sharedApplication] keyWindow] addSubview:self->_activityBG];
+        [[[UIApplication sharedApplication] keyWindow] addSubview:self->_activity];
+        [[[UIApplication sharedApplication] keyWindow] bringSubviewToFront:self->_activityBG];
+        [[[UIApplication sharedApplication] keyWindow] bringSubviewToFront:self->_activity];
         
-        _activityText = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(_activityBG.bounds), 20.f)];
-        [_activityText setText:@""];
-        [_activityText setFont:[UIFont systemFontOfSize:15.f]];
-        [_activityText setTextColor:[UIColor whiteColor]];
-        [_activityText setTextAlignment:NSTextAlignmentCenter];
-        [[[UIApplication sharedApplication] keyWindow]  addSubview:_activityText];
-        [[[UIApplication sharedApplication] keyWindow] bringSubviewToFront:_activityText];
-        [_activityText setCenter:[_activityBG center]];
-        [_activityText setFrame:CGRectOffset(_activityText.frame, 0.f, 30.f)];
+        self->_activityText = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self->_activityBG.bounds), 20.f)];
+        [self->_activityText setText:@""];
+        [self->_activityText setFont:[UIFont systemFontOfSize:15.f]];
+        [self->_activityText setTextColor:[UIColor whiteColor]];
+        [self->_activityText setTextAlignment:NSTextAlignmentCenter];
+        [[[UIApplication sharedApplication] keyWindow]  addSubview:self->_activityText];
+        [[[UIApplication sharedApplication] keyWindow] bringSubviewToFront:self->_activityText];
+        [self->_activityText setCenter:[self->_activityBG center]];
+        [self->_activityText setFrame:CGRectOffset(self->_activityText.frame, 0.f, 30.f)];
         [[self navigationItem] setHidesBackButton:YES animated:YES];
         [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
     });
@@ -61,7 +61,7 @@
 -(void)changeActivityText:(NSString *)newText
 {
     dispatch_async(dispatch_get_main_queue(), ^(void){
-        [_activityText setText:newText];
+        [self->_activityText setText:newText];
     });
 }
 
@@ -69,14 +69,14 @@
 {
     DLog(@"");
     dispatch_async(dispatch_get_main_queue(), ^(void){
-        if( _activityBG )
+        if( self->_activityBG )
         {
-            [_activityText removeFromSuperview];
-            _activityText = nil;
-            [_activityBG removeFromSuperview];
-            _activityBG = nil;
-            [_activity removeFromSuperview];
-            _activity = nil;
+            [self->_activityText removeFromSuperview];
+            self->_activityText = nil;
+            [self->_activityBG removeFromSuperview];
+            self->_activityBG = nil;
+            [self->_activity removeFromSuperview];
+            self->_activity = nil;
             [[self navigationItem] setHidesBackButton:NO animated:YES];
             [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
         }
